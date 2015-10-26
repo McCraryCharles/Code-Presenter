@@ -1,0 +1,84 @@
+/* NavBar */
+.navbar-default{
+	background-color: transparent;
+	border: 0;
+	margin-top: 20px;
+}
+.navbar-default .navbar-brand {
+	color: #fff;
+}
+.navbar-default .navbar-brand:hover {
+	color: #fff;
+}
+.navbar-default .navbar-nav>li>a {
+	color: #fff;
+	margin-left: 10px;
+}
+.navbar-default .navbar-nav>li>a:hover {
+	color: #fff;
+}
+.navbar-default .navbar-toggle .icon-bar {
+	background-color: #fff;
+}
+.navbar-default .navbar-toggle {
+	border-color: #fff;
+}
+.well {
+	background-color: #fff;
+}
+.btn {
+	border-width: 3px;
+}
+.btn-default {
+	background-color: #fff;
+	border-color: #fff;
+	border-width: 3px;
+	color: #159dcc;
+}
+.btn-default:hover,
+.btn-default:focus {
+	background-color: #159dcc !important;
+	border-color: #fff !important;
+	color: #fff !important;
+}
+.btn-default:active {
+	background-color: #058dbc !important;
+	border-color: #fff !important;
+	color: #fff !important;
+	shadow: none !important;
+	-webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+.btn-primary {
+	background-color: #159dcc;
+	border-color: #159dcc;
+}
+.btn-primary:hover {
+	background-color: #058dbc;
+	border-color: #058dbc;
+}
+.btn-primary[disabled], .btn-primary[disabled]:hover,.btn-primary[disabled]:hover, .btn-primary[disabled]:active {
+	background-color: #999;
+	border-color: #999;
+	color: #fff;
+}
+.btn-danger {
+	background-color: #FF6961;
+	border-color: #FF6961;
+}
+.btn-danger:hover {
+	background-color: #FF6961;
+	border-color: #FF6961;
+}
+.btn-invert {
+	background-color: transparent;
+	border-color: #fff;
+	border-width: 2px;
+	color: #fff;
+}
+.btn-invert:hover {
+	background-color: #fff !important;
+	border-color: #fff !important;
+	border-width: 2px !important;
+	color: #159dcc !important;
+}
