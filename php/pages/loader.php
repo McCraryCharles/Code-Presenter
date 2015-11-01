@@ -21,8 +21,24 @@
 			}
 		}
 		else { // If host cookie is not set
-			if (checkRoom($roomCode)) { // If room id is valid
-				include_once 'php/pages/user/user.php'; // Load room
+			if (checkRoom($roomCode) != false) { // If room id is valid
+				if (isset($_COOKIE['userKey'])) {
+					$userKey = $_COOKIE['userKey'];
+					// Check Key
+					$userId = checkUser($userKey); // Checks DB for user and returns id, if does not exist returns false
+					if ($userId != false) {
+						include_once 'php/pages/user/user.php'; // Load user room
+					}
+					else {
+						setcookie('userKey', 0, time() - (60), "/"); // Expire user key to one min ago
+						include_once 'php/pages/user/user.php'; // Load user room
+						echo '<script>promptUser();</script>'; // Run promptuser JS on page load
+					}
+				}
+				else {
+					include_once 'php/pages/user/user.php'; // Load user room
+					echo '<script>promptUser();</script>'; // Run promptuser JS on page load
+				}
 			}
 			else { // If room id does not exist
 				$connectError = "Room not found, please check your code.";

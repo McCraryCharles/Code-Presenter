@@ -25,6 +25,9 @@ body {
 .btn-wide {
 	width: 100%;
 }
+.btn-group-border {
+	border-left: 0;
+}
 .selection-box {
 	color: #159dcc;
 	max-width: 400px;
@@ -121,6 +124,16 @@ body {
 }
 .remove-position {
 	position: inherit;
+}
+.modal-center {
+	position: fixed;
+	top: 25%;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+.input-center {
+	text-align: center;
 }
 
 /* Host CSS */
@@ -300,6 +313,9 @@ body {
 
 /* user CSS */
 
+.loading-text {
+	padding: 15px 30px;
+}
 .user-sidebar {
 	position: fixed;
 	padding: 0 10px;
@@ -326,11 +342,20 @@ body {
 	padding-bottom: 10px;
 	width: 100%;
 }
+.user-sidebar-btn-cont {
+	padding: 0;
+}
+.user-sidebar-btn-cont > a[disabled] {
+	border-color: #fff;
+	background-color: transparent;
+}
 .user-sidebar-header > .btn {
 	margin-right: 5px;
 	margin-left: 0;
 }
-
+.rename-popover {
+	width: 350px;
+}
 .user-submission-tab {
 	background-color: #fff;
 	background-color: rgba(255,255,255,0.75);
@@ -369,6 +394,9 @@ body {
 	position: relative;
 	right: 10px;
 	color: #159dcc;
+}
+#rename-submission-modal-body > form > button {
+	margin-left: 10px;
 }
 .user-code-block {
 	position: fixed;

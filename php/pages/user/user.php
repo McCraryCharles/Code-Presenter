@@ -9,3 +9,4 @@
 <?php include_once 'php/pages/user/sidebar.php'; ?>
 <?php include_once 'php/pages/user/editor.php'; ?>
 <?php include_once 'php/pages/user/footer.php'; ?>
+<?php include_once 'php/pages/user/userModals.php'; ?>

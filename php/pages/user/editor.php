@@ -9,7 +9,10 @@
 				<button type="button" id="" class="btn btn-primary btn-xs editor-btn" onclick="saveSubmission();" data-toggle="tooltip" data-placement="top" data-delay="1000" title="Save" disabled="disabled">
 					<i class="fa fa-floppy-o"></i>
 				</button>
-				<button type="button" id="" class="btn btn-primary btn-xs editor-btn" onclick="" data-toggle="tooltip" data-placement="top" data-delay="1000" title="Publish to room" disabled="disabled">Publish</button>
+				<button type="button" id="" class="btn btn-primary btn-xs editor-btn" onclick="deleteSubmission();" data-toggle="tooltip" data-placement="top" data-delay="1000" title="Delete" disabled="disabled">
+					<i class="fa fa-trash-o"></i>
+				</button>
+				<button type="button" id="" class="btn btn-primary btn-xs editor-btn" onclick="publishSubmission()" disabled="disabled">Publish</button>
 			</div>
 		</div>
 		<div id="code-block">

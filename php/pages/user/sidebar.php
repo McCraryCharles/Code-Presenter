@@ -1,10 +1,24 @@
 <div class="user-sidebar" id="user-sidebar">
 	<div class="user-sidebar-header">
-		<a type="button" id="roomButton" class="btn btn-default btn-invert nav-button btn-wide" onclick="newSubmission(<?php echo $roomId; ?>)">New File</a>
+		<div class="btn-group btn-wide" role="group">
+			<div class="btn-group col-xs-6 user-sidebar-btn-cont" role="group">
+				<a type="button" id="new-file-button" class="btn btn-default btn-invert nav-button btn-wide user-sidebar-btn" onclick="newSubmission(<?php echo $roomId; ?>)">New File</a>
+			</div>
+			<div class="btn-group col-xs-3 user-sidebar-btn-cont" role="group">
+				<a type="button" id="rename-button" class="btn btn-default btn-invert nav-button btn-group-border btn-wide user-sidebar-btn" disabled onclick="showRename()"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="Rename" ><i class="fa fa-tag"></i></a>
+			</div>
+			<div class="btn-group col-xs-3 user-sidebar-btn-cont" role="group">
+				<a type="button" id="delete-submission-button" class="btn btn-default btn-invert nav-button btn-group-border btn-wide user-sidebar-btn" disabled onclick="deleteSubmission()" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="Delete" ><i class="fa fa-trash-o"></i></a>
+			</div>
+		</div>
 	</div>
+	<div class="clearfix"></div>
+	<br />
 	<div class="user-sidebar-content" id="user-sidebar-content">
 		<?php 
-			$submissions = loadUserSubmissions($_COOKIE['userKey']);
+			if (isset($_COOKIE['userKey'])) {// If user key cookie is set, load files
+				$submissions = loadUserSubmissions($_COOKIE['userKey']);
+			}
 			if (empty($submissions)) {
 				echo '
 					<div class="user-submission-tab">

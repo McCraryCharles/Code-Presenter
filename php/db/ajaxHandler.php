@@ -6,6 +6,10 @@
 				$submission = loadSubmission($_POST['submissionId']);
 				echo $submission[0]['content'];
 			break;
+			case 'loadSubmission': // Single Submission
+				$submission = loadSubmission($_POST['submissionId']);
+				echo $submission[0]['content'];
+			break;
 			case 'loadSubmissionName': // Single Submission Name
 				$submission = loadSubmission($_POST['submissionId']);
 				echo $submission[0]['name'];
@@ -83,9 +87,16 @@
 					}
 				}
 			break;
+			case 'renameSubmission':
+				renameSubmission($_POST['submissionId'], $_POST['name']);
+			break;
 			case 'clearSubmissions':
 				clearSubmissions($_POST['roomId']);
 				echo $_POST['roomId']; // Room id needs to be echoed into the cb function submitted through AJAX
+			break;
+			case 'createUser': // Creates a user
+				$room = checkRoom($_POST['roomCode']);
+				echo createUser($room, $_POST['userName']);
 			break;
 		}
 	}

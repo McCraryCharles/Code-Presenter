@@ -82,3 +82,9 @@
 	border-width: 2px !important;
 	color: #159dcc !important;
 }
+.modal {
+	color: #222;
+}
+.modal-content {
+	border-radius: 3px;
+}
