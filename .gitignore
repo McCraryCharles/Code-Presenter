@@ -1,1 +1,2 @@
-/php/db/connect.php
+php/db/connect.php
+php/pages/home/captchaKey.php

@@ -7,6 +7,16 @@
 
 	include_once 'connect.php'; // Include the connection file that initiate a connection to the database and stores the object as $conn
 
+	function updateRoom($roomId) {
+		global $conn;
+		$sql = "UPDATE `rooms` SET `updated` = CURRENT_TIMESTAMP WHERE `id` = " . $roomId . ";";
+		mysqli_query($conn, $sql);
+	}
+	function checkRoomUpdate($roomId) { // Checks the last time the room was updated
+		$sqlArgs = "WHERE `id` = " . $roomId;
+		return sqlToArray ('rooms','updated',$sqlArgs)[0]['updated'];
+	}
+
 	function checkRoom($roomCode) { // Checks validity of a room code, returns a bool
 		$sqlArgs = "WHERE `code` = '" . $roomCode . "'";
 		$sqlReturn = sqlToArray ('rooms','id',$sqlArgs);
@@ -40,6 +50,37 @@
 		}
 	}
 
+	function getUserRoom($userId) { // Loads the room id assigned to a user
+		$sqlArgs = "WHERE `id` = '" . $userId . "'";
+		$sqlReturn = sqlToArray ('users','room',$sqlArgs);
+		if (empty($sqlReturn)) {
+			return false;
+		}
+		else {
+			return $sqlReturn[0]['room'];
+		}
+	}
+
+	function createRoom() {
+		// Create Room Id
+		$roomId;
+		do {
+			$roomId = strtoupper(substr(keyGen(),mt_rand(0, 20),6)); // Creates an uppercase 6 character key from the keygen
+		}
+		while (checkRoom($roomId)); // Check for a duplicate key
+		// Create Host Key
+		$hostId;
+		do {
+			$hostId = keyGen();
+		}
+		while (checkHost($hostId)); // Check for a duplicate key
+		global $conn;
+		$sql = "INSERT INTO `rooms` (`code`, `host`, `updated`, `expires`) VALUES ('".$roomId."', '".$hostId."', CURRENT_TIMESTAMP, DATE_ADD(NOW(), INTERVAL 12 HOUR));";
+		mysqli_query($conn, $sql);
+		setcookie("hostId", $hostId, time()+(3600*12)); // Set host cookie for 12 hours
+		return $roomId;
+	}
+
 	function createUser($room, $name) {
 		$userKey;
 		do {
@@ -58,6 +99,11 @@
 		mysqli_query($conn, $sql);
 	}
 
+	function getUsername($userId) { // Gets username from user id
+		$sqlArgs = "WHERE `id` = '" . $userId . "'";
+		return sqlToArray ('users','name',$sqlArgs)[0]['name'];
+	}
+
 	function deleteUserSubmissions($userId) { // Delets all user submissions for a user id
 		$sql = 'DELETE FROM `submissions` WHERE `user` = ' . $userId;
 		mysqli_query($conn, $sql);
@@ -74,14 +120,18 @@
 	}
 
 	function loadSubmissions($roomId) { // Loads array of submissions for a room id
-		return sqlToArray ('submissions','*','WHERE `user` IN (SELECT `id` FROM `users` WHERE `room` = ' . $roomId . ')');
+		return sqlToArray ('submissions','*','WHERE `user` IN (SELECT `id` FROM `users` WHERE `room` = ' . $roomId . ') AND `published` = 1');
 	}
 	function loadUserSubmissions($userKey) {// Loads array of submissions for a user key
-		$userId = sqlToArray ('users','id','WHERE `userKey` = "' . $userKey . '"')[0]['id'];
+		$userId = sqlToArray ('users','id','WHERE `userKey` = "' . htmlspecialchars($userKey) . '"')[0]['id'];
 		return sqlToArray ('submissions','*','WHERE `user` = ' . $userId);
 	}
 	function loadSubmission($submissionId) { // Loads a specific submission
 		return sqlToArray ('submissions','*','WHERE `id` = ' . $submissionId);
+	}
+	function getLatestSubmissionId ($userKey) {
+		$userId = sqlToArray ('users','id','WHERE `userKey` = "' . $userKey . '"')[0]['id'];
+		return sqlToArray ('submissions','id','WHERE `user` = ' . $userId . ' ORDER BY `updated` DESC LIMIT 0 , 1')[0]['id'];
 	}
 	function getRoomId($roomCode) { // Gets the room id for a room code, if not found returns false
 		return sqlToArray ('rooms','id','WHERE `code` = "' . $roomCode . '"')[0]['id'];
@@ -89,20 +139,25 @@
 	function getUserId($userKey) { // Gets the user id for a user key
 		return sqlToArray ('users','id','WHERE `userKey` = "' . $userKey . '"')[0]['id'];
 	}
-	function createSubmission($roomId, $userKey) { // Creates a new submission
+	function createSubmission($userKey, $name) { // Creates a new submission
 		$inputArray['user'] = getUserId($userKey);
-		$inputArray['name'] = 'New Submission';
+		$inputArray['name'] = htmlspecialchars($name);
 		//$inputArray['content'] = htmlspecialchars('Console.WriteLine("Lets code!")');
 		arrayToSql ('insert', 'submissions', $inputArray, '');
 	}
 	function renameSubmission($submissionId, $name) { // Renames a submission
-		$inputArray['name'] = $name;
+		$inputArray['name'] = htmlspecialchars($name);
 		$sqlArgs = 'WHERE `id` = ' . $submissionId;
 		arrayToSql('update', 'submissions', $inputArray, $sqlArgs);
 	}
+	function deleteSubmission($submissionId) { // Delets a single submission by id
+		global $conn;
+		$sql = 'DELETE FROM `submissions` WHERE `id` = ' . $submissionId;
+		mysqli_query($conn, $sql);
+	}
 	function clearSubmissions($roomId) { // Clears submissions for a specific room id
 		global $conn;
-		$sql = "DELETE FROM`submissions` WHERE `room` = " . $roomId;
+		$sql = "UPDATE `submissions`  SET  `published` =  '0' WHERE `user` IN (SELECT `id` FROM `users` WHERE `room` = " . $roomId . " )";
 		return mysqli_query($conn, $sql);
 	}
 	function userSubmissionNum($userId) {
@@ -111,17 +166,15 @@
 		$sqlData = mysqli_query($conn, $sql);
 		return mysqli_num_rows($sqlData);
 	}
-	function updateSubmission($room, $name) { // Updates a submission
-		$userKey;
-		do {
-			$userKey = keyGen($name);
-		}
-		while (checkUser($userKey)); // Check for a duplicate key
-		$inputArray['room'] = htmlspecialchars($room);
-		$inputArray['name'] = htmlspecialchars($name); 
-		$inputArray['userKey'] = $userKey;
-		arrayToSql ('insert', 'users', $inputArray,'');
-		return $userKey;
+	function updateSubmission($submissionId, $content) { // Updates a submission
+		global $conn;
+		$sql = 'UPDATE `submissions` SET `content` = "' . htmlspecialchars($content) . '", `updated` = CURRENT_TIMESTAMP WHERE `id` = ' . $submissionId . ';';
+		mysqli_query($conn, $sql);
+	}
+	function publishSubmission($submissionId, $published) { // Publishes and recalls a submission
+		$inputArray['published'] = $published;
+		$sqlArgs = 'WHERE `id` = ' . $submissionId;
+		arrayToSql('update', 'submissions', $inputArray, $sqlArgs);
 	}
 	function sqlToArray ($table,$cols,$sqlArgs) { // Function makes an SQL querey and returns results in a 3D array sqlToArray (<SQL TABLE>,<COLUMNS DESIRED or * for all>,<SQL ARGS such as ORDER BY name>) [<RESULT NUM>][COL NAME] = VALUE
 		global $conn;

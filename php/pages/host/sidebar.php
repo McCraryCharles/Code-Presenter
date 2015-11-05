@@ -13,9 +13,9 @@
 				foreach ($submissions as $submission) {
 					echo '
 						<div class="submission-tab" onclick="loadSubmission('.$submission['id'].')">
-							<b>'.$submission['name'].'</b>
-							<br />
-							'.date('h:i A', strtotime($submission['updated'])).'
+							<div class="title">'.$submission['name'].'</div><div class="time">' .date('h:i A', strtotime($submission['updated'])).'</div>
+							<span class="clearfix"></span>
+							<div class="name">'.getUsername($submission['user']).'</div>
 						</div>
 					';
 				}

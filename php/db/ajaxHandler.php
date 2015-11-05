@@ -2,31 +2,48 @@
 	include_once 'dbLibrary.php';
 	if (isset($_POST['function'])){
 		switch ($_POST['function']) {
-			case 'loadSubmission': // Single Submission
-				$submission = loadSubmission($_POST['submissionId']);
-				echo $submission[0]['content'];
+			case 'checkRoomUpdate':
+				echo checkRoomUpdate($_POST['roomId']);
+			break;
+			case 'updateRoom':
+				updateRoom($_POST['roomId']);
 			break;
 			case 'loadSubmission': // Single Submission
 				$submission = loadSubmission($_POST['submissionId']);
 				echo $submission[0]['content'];
+			break;
+			case 'loadSubmissionCode': // Single Submission Code Content
+				$submission = loadSubmission($_POST['submissionId']);
+				echo htmlspecialchars_decode($submission[0]['content']);
 			break;
 			case 'loadSubmissionName': // Single Submission Name
 				$submission = loadSubmission($_POST['submissionId']);
 				echo $submission[0]['name'];
 			break;
-			case 'loadSubmissionLastSave': // Single Submission Name
+			case 'loadSubmissionLastSave': // Single Submission Last Save Time
 				$submission = loadSubmission($_POST['submissionId']);
 				echo 'Last Save: ' . date('h:i A', strtotime($submission[0]['updated']));
+			break;
+			case 'loadSubmissionPublished': // Load a submissions published status (1 = published)
+				$submission = loadSubmission($_POST['submissionId']);
+				echo $submission[0]['published'];
 			break;
 			case 'newSubmission': // Create a new submission
 				$userId = getUserId($_POST['userKey']);
 				if (userSubmissionNum($userId) < 5) {
 					echo $_POST['userKey'];
-					createSubmission($_POST['roomId'], $_POST['userKey']);
+					createSubmission($_POST['userKey'], $_POST['name']);
 				}
 				else {
 					echo 'MAX' . $_POST['userKey'];
 				}
+			break;
+			case 'publishSubmission':
+				publishSubmission($_POST['submissionId'], $_POST['published']);
+				echo $_POST['published'];
+			break;
+			case 'latestSubmission':
+				echo getLatestSubmissionId($_POST['userKey']);
 			break;
 			case 'loadSubmissions': // List of submissions for host
 				$submissions = loadSubmissions($_POST['roomId']);
@@ -41,9 +58,9 @@
 					foreach ($submissions as $submission) {
 						echo '
 							<div class="submission-tab" onclick="loadSubmission('.$submission['id'].')">
-								<b>'.$submission['name'].'</b>
-								<br />
-								'.date('h:i A', strtotime($submission['updated'])).'
+								<div class="title">'.$submission['name'].'</div><div class="time">' .date('h:i A', strtotime($submission['updated'])).'</div>
+								<span class="clearfix"></span>
+								<div class="name">'.getUsername($submission['user']).'</div>
 							</div>
 						';
 					}
@@ -87,8 +104,14 @@
 					}
 				}
 			break;
+			case 'saveSubmission':
+				updateSubmission($_POST['submissionId'], $_POST['content']);
+			break;
 			case 'renameSubmission':
 				renameSubmission($_POST['submissionId'], $_POST['name']);
+			break;
+			case 'deleteSubmission':
+				deleteSubmission($_POST['submissionId']);
 			break;
 			case 'clearSubmissions':
 				clearSubmissions($_POST['roomId']);
@@ -97,6 +120,9 @@
 			case 'createUser': // Creates a user
 				$room = checkRoom($_POST['roomCode']);
 				echo createUser($room, $_POST['userName']);
+			break;
+			case 'createRoom':
+				echo createRoom();
 			break;
 		}
 	}

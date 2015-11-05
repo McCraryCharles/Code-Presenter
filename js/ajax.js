@@ -25,16 +25,21 @@ function ajax (file, data, cb) { // Uses AJAX to load a php file, data is option
 	xmlhttp.send(data); // Sends POST data
 }
 
-function ajaxToId(file, data, id) { // Uses AJAX to load a file into the InnerHTML of an element by ID, rate is based on DB config
+function ajaxToId(file, data, id) { // Uses AJAX to load a file into the InnerHTML of an element by ID
 	ajax(file, data, function(response){  // Calls the ajax() function
 			document.getElementById(id).innerHTML = response; // Assigns AJAX response to the element by ID
+		});
+}
+
+function ajaxToIdValue(file, data, id) { // Uses AJAX to load a file into the value of an element by ID
+	ajax(file, data, function(response){  // Calls the ajax() function
+			document.getElementById(id).value = response; // Assigns AJAX response to the element by ID
 		});
 }
 
 function loadPage(page, data) { // Uses AJAX to load a page
 	ajaxToId('php/pages/' + page + '.php', data, 'page-container');
 }
-
 function contentToId(id){
 	ajaxToId('php/assetList.php','',id); // Immediately runs an AJAX call to load the content ASAP
 	if (window.updateInterval !== 0) { // If config updateInterval is 0, ajax call will be made once and not repeat

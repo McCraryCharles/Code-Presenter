@@ -7,12 +7,12 @@
 <div class="container">
 	<?php $page = 'home'; include_once 'php/pages/home/header.php'; ?>
 	<div class="well selection-box">
-		<div class="selection-box-title">
+		<div class="selection-box-title" id="selection-box-title">
 			Get Started
 		</div>
 		<div class="selection-box-content">
-			<form onsubmit="return joinRoom()">
-				<div class="selection-box-content-row">
+			<form id="connection-form" onsubmit="return joinRoom()" action="." method="POST">
+				<div class="selection-box-content-row" id="room-id-cont">
 					<div class="form-error hidden" id ="idError" role="alert">Enter a room code here!</div>
 					<?php
 						if (isset($connectError)) {
@@ -20,9 +20,13 @@
 						}
 					?>
 					<input type="text" id="codeEntry" class="form-control selection-box-content-element" placeholder="Room Code">
+					<input type="hidden" id="new-room-form" name="new-room" value="false" class="hidden">
 				</div>
 				<div class="selection-box-content-row">
-					<button type="button" id="roomButton" class="btn btn-primary btn-wide selection-box-content-element" onclick="joinRoom()">Join Room</button>
+					<div class="g-recaptcha captcha" data-sitekey="6LeONhATAAAAAJF5yyMxKUOAwGTCUecQRxY6qE0F"></div>
+				</div>
+				<div class="selection-box-content-row">
+					<button type="submit" id="joinRoomButton" class="btn btn-primary btn-wide selection-box-content-element">Join Room</button>
 				</div>
 			</form>
 		</div>

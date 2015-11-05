@@ -10,3 +10,4 @@
 <?php include_once 'php/pages/user/editor.php'; ?>
 <?php include_once 'php/pages/user/footer.php'; ?>
 <?php include_once 'php/pages/user/userModals.php'; ?>
+<script>initRoomUpdates(<?php echo $roomId; ?>,'user');</script>

@@ -76,10 +76,25 @@
 	border-width: 2px;
 	color: #fff;
 }
-.btn-invert:hover {
+.btn-invert:hover,
+.btn-invert-active {
 	background-color: #fff !important;
 	border-color: #fff !important;
 	border-width: 2px !important;
+	color: #159dcc !important;
+}
+.btn-invert-b {
+	background-color: transparent;
+	border-color: transparent;
+	border-width: 2px;
+	padding: 7px 13px;
+	color: #159dcc;
+}
+.btn-invert-b:hover {
+	background-color: transparent !important;
+	border-color: #35bdec !important;
+	border-width: 2px !important;
+	padding: 7px 13px;
 	color: #159dcc !important;
 }
 .modal {
@@ -87,4 +102,7 @@
 }
 .modal-content {
 	border-radius: 3px;
+}
+.modal-body > form > button {
+	margin-left: 10px;
 }

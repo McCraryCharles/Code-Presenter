@@ -5,14 +5,33 @@
 	
 	// This file loads the correct page based on the URL / Host cookie
 	
-	if(isset($_GET['roomCode'])) { // If an room is was entered
-		$roomCode = $_GET['roomCode']; // Set the room id variable
+	if(isset($_POST["g-recaptcha-response"]) && !isset($_COOKIE['userKey']) && !isset($_COOKIE['hostId'])){
+		$captcha = $_POST["g-recaptcha-response"];
+		include_once 'php/pages/home/captchaKey.php'; // File contains captcha key
+		$response=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$privatekey."&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']);
+		$response = json_decode($response, true);
+		if($response['success']==false) { // If CAPTCHA was entered incorrectly
+			$connectError = "Invalid captcha response, please try again.";
+			include_once 'php/pages/home.php'; // Load homepage
+			die; // Stop loading
+		}
+	}	
+	if (isset($_POST['new-room'])) {
+		if ($_POST['new-room'] == 'true') {
+			include_once "php/db/dbLibrary.php"; // Include database library
+			header('Location: ?room='. createRoom()); // Create the room and assign cokies
+			die; // Stop loading
+		}
+	}
+
+	if(isset($_GET['room'])) { // If a room id was entered
+		$roomCode = strtoupper($_GET['room']); // Set the room id variable
 		include_once "php/db/dbLibrary.php"; // Include database library
 		$roomId = getRoomId($roomCode); // Get the room id, if code is invalid will set to false
 		if (isset($_COOKIE['hostId'])) { // If a host cookie is set
-			$hostId = $_COOKIE['hostId'];
+			$hostId = strtoupper($_COOKIE['hostId']);
 			$hostIdRoom = checkHost($hostId); // Verify the id
-			if ($hostIdRoom == $roomCode) { // If host id is for the set room
+			if ($hostIdRoom == $roomId) { // If host id is for the set room
 				include_once 'php/pages/host/host.php'; // Load host page
 			}
 			else { // If there is a key mismatch
@@ -26,7 +45,7 @@
 					$userKey = $_COOKIE['userKey'];
 					// Check Key
 					$userId = checkUser($userKey); // Checks DB for user and returns id, if does not exist returns false
-					if ($userId != false) {
+					if ($userId != false && getUserRoom($userId) == $roomId) { // If id is valid, and user is for the correct room
 						include_once 'php/pages/user/user.php'; // Load user room
 					}
 					else {
