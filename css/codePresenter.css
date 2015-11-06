@@ -216,9 +216,9 @@ body {
 	z-index: 50;
 }
 .host-sidebar-content {
-	position: fixed;
+	position: absolute;
 	width: 300px;
-	top: 80px;
+	top: 0;
 	bottom: 65px;
     overflow-y: auto;
 }
