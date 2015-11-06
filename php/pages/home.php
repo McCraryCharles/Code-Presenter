@@ -33,4 +33,5 @@
 	</div>
 	<?php include_once 'php/pages/home/footer.php'; ?>
 	<script>ga('send', 'pageview', '/home');</script>
+	<script>document.getElementById('codeEntry').focus();</script>
 </div>

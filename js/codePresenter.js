@@ -163,6 +163,9 @@ function createSubmission() { // Creates a new submission for the user
 	$('#rename-submission-modal').modal('hide');
 	var name = document.getElementById('rename-input').value;
 	ajax('php/db/ajaxHandler.php', 'function=newSubmission&userKey=' + userKey + '&name=' + name, loadUserSubmissionsNew);
+	// Restores body of rename modal
+	window.setTimeout(function () {document.getElementById('rename-submission-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Rename file:</h4><br /><form onsubmit="return renameSubmission()"><div class="form-group"><input type="text" class="form-control input-center" id="rename-input" placeholder="First Last"></div><button type="button" class="btn btn-primary pull-right" onclick="renameSubmission()">Save</button><span class="clearfix"></span></form>';}, 1500);
+
 }
 function toggleSidebar(){ // Toggels the sidebar in and out on the host page
 	if (document.getElementById('host-sidebar').className == 'host-sidebar') {
