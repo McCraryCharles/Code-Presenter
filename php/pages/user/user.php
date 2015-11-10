@@ -11,4 +11,4 @@
 <?php include_once 'php/pages/user/footer.php'; ?>
 <?php include_once 'php/pages/user/userModals.php'; ?>
 <script>initRoomUpdates(<?php echo $roomId; ?>,'user');</script>
-<script>ga('set', 'pageview', '/user');ga('send', 'pageview');</script>
+<script>ga('set', 'page', '/user');ga('send', 'pageview');</script>
