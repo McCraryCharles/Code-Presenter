@@ -163,9 +163,10 @@ function createSubmission() { // Creates a new submission for the user
 	$('#rename-submission-modal').modal('hide');
 	var name = document.getElementById('rename-input').value;
 	ajax('php/db/ajaxHandler.php', 'function=newSubmission&userKey=' + userKey + '&name=' + name, loadUserSubmissionsNew);
-	// Restores body of rename modal
-	window.setTimeout(function () {document.getElementById('rename-submission-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Rename file:</h4><br /><form onsubmit="return renameSubmission()"><div class="form-group"><input type="text" class="form-control input-center" id="rename-input" placeholder="First Last"></div><button type="button" class="btn btn-primary pull-right" onclick="renameSubmission()">Save</button><span class="clearfix"></span></form>';}, 1500);
-
+	normalizeRenameModal();
+}
+function normalizeRenameModal() { // Restores body of rename modal
+	window.setTimeout(function () {document.getElementById('rename-submission-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Name file:</h4><br /><form id="name-modal-form" onsubmit="return false"><div class="form-group"><input type="text" class="form-control input-center" id="rename-input" placeholder="First Last"></div><button type="button" id="naming-button" class="btn btn-primary pull-right" onclick="renameSubmission()">Save</button><button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button><span class="clearfix"></span></form>';}, 1500);
 }
 function toggleSidebar(){ // Toggels the sidebar in and out on the host page
 	if (document.getElementById('host-sidebar').className == 'host-sidebar') {
@@ -215,7 +216,7 @@ function showRename() {
 		keyboard: true
 	});
 	document.getElementById('naming-button').innerHTML = 'Save';
-	document.getElementById('naming-button').onclick = renameSubmission();
+	document.getElementById('naming-button').onclick = renameSubmission;
 	$('#rename-submission-modal').modal('show');
 	document.getElementById('rename-input').focus();
 }
@@ -224,7 +225,7 @@ function renameSubmission() { // Called on click of the save button in the submi
 	var name = document.getElementById('rename-input').value;
 	// Change prompt modal to renaming submission + loading animation
 	document.getElementById('rename-submission-modal-body').innerHTML = '<center><i class="fa fa-circle-o-notch fa-spin fa-3x loading-text"></i><br /><span class="loading-text">Renaming Submission...</span><span class="clearfix"></span>';
-	ajax('php/db/ajaxHandler.php', 'function=renameSubmission&submissionId=' + loadedSubmission + '&name=' + name, submissionRenamed());
+	ajax('php/db/ajaxHandler.php', 'function=renameSubmission&submissionId=' + loadedSubmission + '&name=' + name, submissionRenamed);
 	window.setTimeout(function () {updateRoom();}, 1000); // Update the room
 	return false; // Prevent browser reloading on enter key press
 }
@@ -236,8 +237,7 @@ function submissionRenamed(response) { // Called after submission has been renam
 	window.setTimeout(function () {loadUserSubmissions(getCookie('userKey'));}, 500); // Updates sidebar
 	window.setTimeout(function () {selectSidebar(loadedSubmission);}, 1000); // Reselects sidebar
 	window.setTimeout(function () {ajaxToId('php/db/ajaxHandler.php', 'function=loadSubmissionName&submissionId=' + loadedSubmission, 'code-title');}, 500); // Updates title in the editor
-	// Restores body of rename modal
-	window.setTimeout(function () {document.getElementById('rename-submission-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Rename file:</h4><br /><form onsubmit="return renameSubmission()"><div class="form-group"><input type="text" class="form-control input-center" id="rename-input" placeholder="First Last"></div><button type="button" class="btn btn-primary pull-right" onclick="renameSubmission()">Save</button><span class="clearfix"></span></form>';}, 1500);
+	normalizeRenameModal();
 }
 function saveSubmission() { // Saves the current submission
 	// Disable save button
