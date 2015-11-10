@@ -10,4 +10,4 @@
 <?php include_once 'php/pages/host/viewer.php'; ?>
 <?php include_once 'php/pages/host/footer.php'; ?>
 <script>initRoomUpdates(<?php echo $roomId; ?>,'host');</script>
-<script>ga('send', 'pageview', '/host');</script>
+<script>ga('set', 'pageview', '/host');ga('send', 'pageview');</script>
