@@ -169,9 +169,6 @@ function publishSubmission($submissionId, $published) { // Publishes and recalls
 function expireRoom ($roomId) { // Expires a room imidiatlly
 	// IN PROGRESS ----------------------------------------------------
 }
-function deleteUser ($userId) { // Deletes a user
-	// IN PROGRESS ----------------------------------------------------
-}
 function sqlToArray ($table,$cols,$sqlArgs) { // Function makes an SQL querey and returns results in a 3D array sqlToArray (<SQL TABLE>,<COLUMNS DESIRED or * for all>,<SQL ARGS such as ORDER BY name>) [<RESULT NUM>][COL NAME] = VALUE
 	global $conn;
 	$sql = "SELECT " . $cols ." FROM " . $table . " " . $sqlArgs;
