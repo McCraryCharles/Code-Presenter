@@ -49,7 +49,7 @@
 			<div class="modal-body" id="user-confirm-modal-body">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title" id="nameEntryLabel">Confirm:</h4>
-				<form id="confirm-modal-form"  onsubmit="return false">
+				<form id="confirm-modal-form" onsubmit="return false">
 					<div id="confirm-dialog">
 						
 					</div>

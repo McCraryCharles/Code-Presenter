@@ -18,9 +18,11 @@ function initRoomUpdates(roomIdIn, roomTypeIn) {
 	switch (roomType) {
 		case 'host':
 			window.setInterval(function () {checkRoomUpdate(roomId);}, 2000); // Starts checking for updates every 2 seconds
+			window.setInterval(function () {checkRoomExpire();}, 60000); // Starts checking for expiration every 60 seconds
 			break;
 		case 'user':
 			window.setInterval(function () {checkRoomUpdate(roomId);}, 5000); // Starts checking for updates every 5 seconds
+			window.setInterval(function () {checkUserExpire();}, 60000); // Starts checking for expiration every 60 seconds
 			break;
 	}
 }
@@ -311,6 +313,27 @@ function submissionDeleted(response) {
 	loadUserSubmissions(getCookie('userKey')); // Updates sidebar
 	// Restores body of rename modal
 	window.setTimeout(function () {document.getElementById('user-confirm-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Confirm:</h4><form  onsubmit="return false"><div id="confirm-dialog"></div><button type="button" id="confirm-button" class="btn btn-primary pull-right" onclick="">Yes</button><button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button><span class="clearfix"></span></form>';}, 1500);
+}
+function checkRoomExpire() { // Checks room id for session expiration
+	ajax('php/db/ajaxHandler.php', 'function=checkRoomExpire&roomId=' + roomId, checkExpire);
+}
+function checkUserExpire() { // Checks user id for session expiration
+	ajax('php/db/ajaxHandler.php', 'function=checkUserExpire&userKey=' + getCookie('userKey'), checkExpire);
+}
+function checkExpire(response) { // Notifies of expired session if session is missing
+	if (response == 'expired') {
+		sessionExpired();
+	}
+}
+function sessionExpired() { // Called when session has expired
+	document.getElementById('user-confirm-modal-body').innerHTML = '<h4 class="modal-title" id="nameEntryLabel">Your Session Has Expired</h4><form id="confirm-modal-form" action="." method="POST"><div id="confirm-dialog">Click exit to leave the room.</div><button type="submit" id="confirm-button" class="btn btn-primary pull-right" onclick="">Exit</button><span class="clearfix"></span></form>';
+	$('#user-confirm-modal').modal({ // Disable backdrop closing of modal
+  		backdrop: "static",
+		keyboard: true
+	});
+	$('#user-confirm-modal').modal('show');
+	expireCookie('userKey');
+	expireCookie('hostId');
 }
 function getCookie(name) { // Gets the value of a cookie by name
 	var value = "; " + document.cookie;

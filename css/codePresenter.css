@@ -3,6 +3,9 @@ body {
 	color: #fff;
 	font-family: 'Open Sans', sans-serif;
 }
+.container {
+	min-width: 300px;
+}
 .pageContainer {
 	background-color: #159dcc;
 }
@@ -59,8 +62,23 @@ body {
 .form-alert {
 	
 }
+.captcha-cont {
+	text-align: center;
+	display: block;
+	width: 100%;
+}
 .captcha {
-	
+	margin: 0 auto;
+	display: block;
+}
+@media screen and (max-width: 450px){
+	.captcha {;
+		transform:scale(0.64);
+		width: 200px;
+		-webkit-transform:scale(0.64);
+		transform-origin:0 0;
+		-webkit-transform-origin:0 0;
+	}
 }
 ::-webkit-scrollbar {
     width: 5px;

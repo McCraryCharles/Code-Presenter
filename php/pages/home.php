@@ -23,7 +23,9 @@
 					<input type="hidden" id="new-room-form" name="new-room" value="false" class="hidden">
 				</div>
 				<div class="selection-box-content-row">
-					<div class="g-recaptcha captcha" data-sitekey="6LeONhATAAAAAJF5yyMxKUOAwGTCUecQRxY6qE0F"></div>
+					<div class="captcha-cont">
+						<div class="g-recaptcha captcha" data-sitekey="6LeONhATAAAAAJF5yyMxKUOAwGTCUecQRxY6qE0F"></div>
+					</div>
 				</div>
 				<div class="selection-box-content-row">
 					<button type="submit" id="joinRoomButton" class="btn btn-primary btn-wide selection-box-content-element">Join Room</button>

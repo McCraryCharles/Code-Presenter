@@ -31,7 +31,7 @@
 		if (isset($_COOKIE['hostId'])) { // If a host cookie is set
 			$hostId = strtoupper($_COOKIE['hostId']);
 			$hostIdRoom = checkHost($hostId); // Verify the id
-			if ($hostIdRoom == $roomId) { // If host id is for the set room
+			if ($hostIdRoom == $roomId && !empty($roomId)) { // If host id is for the set room
 				include_once 'php/pages/host/host.php'; // Load host page
 			}
 			else { // If there is a key mismatch

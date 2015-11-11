@@ -105,6 +105,16 @@
 					}
 				}
 			break;
+			case 'checkHostExpire':
+				if (checkRoom($_POST['roomCode']) == false) {
+					echo 'expired';
+				}
+			break;
+			case 'checkUserExpire':
+				if(checkUser($_POST['userKey']) == false) {
+					echo 'expired';
+				}
+			break;
 			case 'saveSubmission':
 				updateSubmission($_POST['submissionId'], $_POST['content']);
 				updateRoom($_POST['roomId']); // Updates the room update var
