@@ -31,6 +31,15 @@ function ajaxToId(file, data, id) { // Uses AJAX to load a file into the InnerHT
 		});
 }
 
+function ajaxToIdCb(file, data, id, cb) { // Uses AJAX to load a file into the InnerHTML of an element by ID then calls a callback
+	ajax(file, data, function(response){  // Calls the ajax() function
+			document.getElementById(id).innerHTML = response; // Assigns AJAX response to the element by ID
+			if ( typeof cb === 'function' ) { // If arg "cb" was a function (which it should be)
+				cb(response); // Run the function assigned to "cb" with the AJAX response as the argument
+			}
+		});
+}
+
 function ajaxToIdValue(file, data, id) { // Uses AJAX to load a file into the value of an element by ID
 	ajax(file, data, function(response){  // Calls the ajax() function
 			document.getElementById(id).value = response; // Assigns AJAX response to the element by ID

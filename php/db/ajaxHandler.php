@@ -40,6 +40,7 @@
 			break;
 			case 'publishSubmission':
 				publishSubmission($_POST['submissionId'], $_POST['published']);
+				updateRoom($_POST['roomId']); // Updates the room update var
 				echo $_POST['published'];
 			break;
 			case 'latestSubmission':
@@ -106,15 +107,19 @@
 			break;
 			case 'saveSubmission':
 				updateSubmission($_POST['submissionId'], $_POST['content']);
+				updateRoom($_POST['roomId']); // Updates the room update var
 			break;
 			case 'renameSubmission':
 				renameSubmission($_POST['submissionId'], $_POST['name']);
+				updateRoom($_POST['roomId']); // Updates the room update var
 			break;
 			case 'deleteSubmission':
 				deleteSubmission($_POST['submissionId']);
+				updateRoom($_POST['roomId']); // Updates the room update var
 			break;
 			case 'clearSubmissions':
 				clearSubmissions($_POST['roomId']);
+				updateRoom($_POST['roomId']); // Updates the room update var
 				echo $_POST['roomId']; // Room id needs to be echoed into the cb function submitted through AJAX
 			break;
 			case 'createUser': // Creates a user

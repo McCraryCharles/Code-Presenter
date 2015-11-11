@@ -94,6 +94,9 @@ function selectSidebar(submissionId) { // Hilights a sidebar item and enables si
 	$('#user-sidebar-content').children().removeClass('user-sidebar-selected');
 	$("#user-submission-tab-" + submissionId).addClass('user-sidebar-selected');
 }
+function reSelectSidebar() { // Reselects latest sidebar item after an update
+	selectSidebar(loadedSubmission);
+}
 function unselectSidebar() { // Hilights a sidebar item and enables sidebar controls
 	$('#rename-button').attr('disabled', 'disabled');
 	$('#delete-submission-button').attr('disabled', 'disabled');
@@ -131,20 +134,23 @@ function loadSubmissions(roomId) { // All submissions for host
 }
 function loadUserSubmissions(userKey) { // All submissions for user
 	if (userKey.substring(0,3) == 'MAX') {
-		ajaxToId('php/db/ajaxHandler.php', 'function=loadUserSubmissions&error=maxSubmissions&userKey=' + userKey.substring(3), 'user-sidebar-content');
+		ajaxToIdCb('php/db/ajaxHandler.php', 'function=loadUserSubmissions&error=maxSubmissions&userKey=' + userKey.substring(3), 'user-sidebar-content', reSelectSidebar);
 	}
 	else {
-		ajaxToId('php/db/ajaxHandler.php', 'function=loadUserSubmissions&userKey=' + userKey, 'user-sidebar-content');
+		ajaxToIdCb('php/db/ajaxHandler.php', 'function=loadUserSubmissions&userKey=' + userKey, 'user-sidebar-content', reSelectSidebar);
 	}
 }
 function loadUserSubmissionsNew(userKey) { // All submissions for user after a new submission was created
 	if (userKey.substring(0,3) == 'MAX') {
-		ajaxToId('php/db/ajaxHandler.php', 'function=loadUserSubmissions&error=maxSubmissions&userKey=' + userKey.substring(3), 'user-sidebar-content');
+		ajaxToIdCb('php/db/ajaxHandler.php', 'function=loadUserSubmissions&error=maxSubmissions&userKey=' + userKey.substring(3), 'user-sidebar-content', reSelectSidebar);
 	}
 	else {
-		ajaxToId('php/db/ajaxHandler.php', 'function=loadUserSubmissions&userKey=' + userKey, 'user-sidebar-content');
-		window.setTimeout(function () {ajax('php/db/ajaxHandler.php', 'function=latestSubmission&userKey=' + userKey, loadUserSubmission);}, 1000);
+		ajaxToIdCb('php/db/ajaxHandler.php', 'function=loadUserSubmissions&userKey=' + userKey, 'user-sidebar-content',loadLatestSubmission);
 	}
+}
+function loadLatestSubmission() {
+	var userKey = getCookie('userKey');
+	ajax('php/db/ajaxHandler.php', 'function=latestSubmission&userKey=' + userKey, loadUserSubmission);
 }
 function newSubmission() { // Prompts user for new submission name
 	document.getElementById('rename-input').value = '';
@@ -165,8 +171,8 @@ function createSubmission() { // Creates a new submission for the user
 	ajax('php/db/ajaxHandler.php', 'function=newSubmission&userKey=' + userKey + '&name=' + name, loadUserSubmissionsNew);
 	normalizeRenameModal();
 }
-function normalizeRenameModal() { // Restores body of rename modal
-	window.setTimeout(function () {document.getElementById('rename-submission-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Name file:</h4><br /><form id="name-modal-form" onsubmit="return false"><div class="form-group"><input type="text" class="form-control input-center" id="rename-input" placeholder="First Last"></div><button type="button" id="naming-button" class="btn btn-primary pull-right" onclick="renameSubmission()">Save</button><button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button><span class="clearfix"></span></form>';}, 1500);
+function normalizeRenameModal() { // Restores body of rename modal after 1 sec
+	window.setTimeout(function () {document.getElementById('rename-submission-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Name file:</h4><br /><form id="name-modal-form" onsubmit="return false"><div class="form-group"><input type="text" class="form-control input-center" id="rename-input" placeholder="First Last"></div><button type="button" id="naming-button" class="btn btn-primary pull-right" onclick="renameSubmission()">Save</button><button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button><span class="clearfix"></span></form>';}, 1000);
 }
 function toggleSidebar(){ // Toggels the sidebar in and out on the host page
 	if (document.getElementById('host-sidebar').className == 'host-sidebar') {
@@ -204,7 +210,6 @@ function userCreated(userKey){ // After user is created
 function clearSubmissions(roomId) { // Clears all submissions for a room by setting them to unpublished
 	if (confirm('Are you sure you want to unpublish all submissions?')) {
 		ajax('php/db/ajaxHandler.php', 'function=clearSubmissions&roomId=' + roomId, loadSubmissions);
-		window.setTimeout(function () {updateRoom();}, 1000); // Update the room
 	}
 }
 function showRename() {
@@ -225,8 +230,7 @@ function renameSubmission() { // Called on click of the save button in the submi
 	var name = document.getElementById('rename-input').value;
 	// Change prompt modal to renaming submission + loading animation
 	document.getElementById('rename-submission-modal-body').innerHTML = '<center><i class="fa fa-circle-o-notch fa-spin fa-3x loading-text"></i><br /><span class="loading-text">Renaming Submission...</span><span class="clearfix"></span>';
-	ajax('php/db/ajaxHandler.php', 'function=renameSubmission&submissionId=' + loadedSubmission + '&name=' + name, submissionRenamed);
-	window.setTimeout(function () {updateRoom();}, 1000); // Update the room
+	ajax('php/db/ajaxHandler.php', 'function=renameSubmission&submissionId=' + loadedSubmission + '&name=' + name + '&roomId=' + roomId, submissionRenamed);
 	return false; // Prevent browser reloading on enter key press
 }
 function submissionRenamed(response) { // Called after submission has been renamed
@@ -234,9 +238,8 @@ function submissionRenamed(response) { // Called after submission has been renam
 	document.getElementById('rename-submission-modal-body').innerHTML = '<center><i class="fa fa-check fa-3x loading-text"></i><br /><span class="loading-text">Submission Renamed!</span><span class="clearfix"></span>';
 	// Close modal
 	window.setTimeout(function () {$('#rename-submission-modal').modal('hide');}, 1000);
-	window.setTimeout(function () {loadUserSubmissions(getCookie('userKey'));}, 500); // Updates sidebar
-	window.setTimeout(function () {selectSidebar(loadedSubmission);}, 1000); // Reselects sidebar
-	window.setTimeout(function () {ajaxToId('php/db/ajaxHandler.php', 'function=loadSubmissionName&submissionId=' + loadedSubmission, 'code-title');}, 500); // Updates title in the editor
+	loadUserSubmissions(getCookie('userKey')); // Updates sidebar
+	ajaxToId('php/db/ajaxHandler.php', 'function=loadSubmissionName&submissionId=' + loadedSubmission, 'code-title'); // Updates title in the editor
 	normalizeRenameModal();
 }
 function saveSubmission() { // Saves the current submission
@@ -246,7 +249,7 @@ function saveSubmission() { // Saves the current submission
 	document.getElementById('last-save').innerHTML = 'Saving... <i class="fa fa-circle-o-notch fa-spin"></i>';
 	// AJAX call to delete the submission
 	var content = document.getElementById('code-box').value;
-	ajax('php/db/ajaxHandler.php', 'function=saveSubmission&submissionId=' + loadedSubmission + '&content=' + content, submissionSaved());
+	ajax('php/db/ajaxHandler.php', 'function=saveSubmission&submissionId=' + loadedSubmission + '&content=' + content + '&roomId=' + roomId, submissionSaved());
 }
 function submissionSaved(response) { // Called after a submission is saved
 	// Set last-save to saved
@@ -255,8 +258,7 @@ function submissionSaved(response) { // Called after a submission is saved
 	window.setTimeout(function () {$('#save-button').removeAttr('disabled');}, 500);
 	// Update last save time
 	window.setTimeout(function () {ajaxToId('php/db/ajaxHandler.php', 'function=loadSubmissionLastSave&submissionId=' + loadedSubmission, 'last-save');}, 3000);
-	window.setTimeout(function () {loadUserSubmissions(getCookie('userKey'));}, 500); // Updates sidebar
-	window.setTimeout(function () {selectSidebar(loadedSubmission);}, 1000); // Reselects sidebar
+	loadUserSubmissions(getCookie('userKey'));
 }
 function publishSubmission() { // Publishes the current submission
 	// Disable publish
@@ -269,20 +271,18 @@ function publishSubmission() { // Publishes the current submission
 	}
 	else {published = 0;}
 	// AJAX call to publish the submission
-	ajax('php/db/ajaxHandler.php', 'function=publishSubmission&submissionId=' + loadedSubmission + '&published=' + published, submissionPublished);
-	window.setTimeout(function () {updateRoom();}, 1000); // Update the room
+	ajax('php/db/ajaxHandler.php', 'function=publishSubmission&submissionId=' + loadedSubmission + '&published=' + published + '&roomId=' + roomId, submissionPublished);
 }
 function submissionPublished(response) { // Called after a submission is saved
 	// Set publish button state
 	if (response == 1) {
-		window.setTimeout(function () {document.getElementById('publish-button').innerHTML = 'Recall';}, 250);
+		document.getElementById('publish-button').innerHTML = 'Recall';
 	}
 	else {
-		window.setTimeout(function () {document.getElementById('publish-button').innerHTML = 'Publish';}, 250);
+		document.getElementById('publish-button').innerHTML = 'Publish';
 	}
-	window.setTimeout(function () {$('#publish-button').removeAttr('disabled');}, 500);// Re-enable publish button
-	window.setTimeout(function () {loadUserSubmissions(getCookie('userKey'));}, 500); // Updates sidebar
-	window.setTimeout(function () {selectSidebar(loadedSubmission);}, 1000); // Reselects sidebar
+	$('#publish-button').removeAttr('disabled');// Re-enable publish button
+	loadUserSubmissions(getCookie('userKey')); // Updates sidebar
 }
 function confirmDelete() { // Called when the delete button is pressed, confirms a submission deletion
 	document.getElementById('confirm-button').innerHTML = 'Delete';
@@ -300,8 +300,7 @@ function deleteSubmission() {
 	// Change prompt modal to deleting submission + loading animation
 	document.getElementById('user-confirm-modal-body').innerHTML = '<center><i class="fa fa-circle-o-notch fa-spin fa-3x loading-text"></i><br /><span class="loading-text">Deleting Submission...</span><span class="clearfix"></span>';
 	// AJAX call to delete the submission
-	ajax('php/db/ajaxHandler.php', 'function=deleteSubmission&submissionId=' + loadedSubmission, submissionDeleted());
-	window.setTimeout(function () {updateRoom();}, 1000); // Update the room
+	ajax('php/db/ajaxHandler.php', 'function=deleteSubmission&submissionId=' + loadedSubmission + '&roomId=' + roomId, submissionDeleted());
 	return false; // Prevent browser reloading on enter key press
 }
 function submissionDeleted(response) {
@@ -309,7 +308,7 @@ function submissionDeleted(response) {
 	document.getElementById('user-confirm-modal-body').innerHTML = '<center><i class="fa fa-check fa-3x loading-text"></i><br /><span class="loading-text">Submission Deleted!</span><span class="clearfix"></span>';
 	// Close modal
 	window.setTimeout(function () {$('#user-confirm-modal').modal('hide');}, 1000);
-	window.setTimeout(function () {loadUserSubmissions(getCookie('userKey'));}, 500); // Updates sidebar
+	loadUserSubmissions(getCookie('userKey')); // Updates sidebar
 	// Restores body of rename modal
 	window.setTimeout(function () {document.getElementById('user-confirm-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Confirm:</h4><form  onsubmit="return false"><div id="confirm-dialog"></div><button type="button" id="confirm-button" class="btn btn-primary pull-right" onclick="">Yes</button><button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button><span class="clearfix"></span></form>';}, 1500);
 }
