@@ -10,5 +10,5 @@
 <?php include_once 'php/pages/user/editor.php'; ?>
 <?php include_once 'php/pages/user/footer.php'; ?>
 <?php include_once 'php/pages/user/userModals.php'; ?>
-<script>initRoomUpdates(<?php echo $roomId; ?>,'user');</script>
+<script>initRoomUpdates('user',<?php echo $roomId .','. $config['userUpdateInterval'] .','.  $config['expireUpdateInterval']; ?>);</script>
 <script>ga('set', 'page', '/user');ga('send', 'pageview');</script>

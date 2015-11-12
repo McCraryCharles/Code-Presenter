@@ -11,7 +11,7 @@
 						<input type="text" class="form-control input-center" id="name-input" placeholder="First Last">
 						<input type="hidden" id="room-code" value="<?php echo $roomCode; ?>">
 					</div>
-					<button type="button" class="btn btn-primary pull-right" onclick="createUser()">Get Coding</button>
+					<button type="submit" class="btn btn-primary pull-right">Get Coding</button>
 					<span class="clearfix"></span>
 				</form>
 			</div>
@@ -28,11 +28,11 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title" id="nameEntryLabel">Name file:</h4>
 				<br />
-				<form id="name-modal-form" onsubmit="return false">
+				<form id="name-modal-form" onsubmit="return renameSubmission()">
 					<div class="form-group">
 						<input type="text" class="form-control input-center" id="rename-input" placeholder="First Last">
 					</div>
-					<button type="button" id="naming-button" class="btn btn-primary pull-right" onclick="renameSubmission()">Save</button>
+					<button type="submit" id="naming-button" class="btn btn-primary pull-right">Save</button>
 					<button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button>
 					<span class="clearfix"></span>
 				</form>
@@ -53,7 +53,7 @@
 					<div id="confirm-dialog">
 						
 					</div>
-					<button type="button" id="confirm-button" class="btn btn-primary pull-right" onclick="">Yes</button>
+					<button type="submit" id="confirm-button" class="btn btn-primary pull-right">Yes</button>
 					<button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button>
 					<span class="clearfix"></span>
 				</form>

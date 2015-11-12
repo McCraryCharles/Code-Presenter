@@ -166,8 +166,27 @@ function publishSubmission($submissionId, $published) { // Publishes and recalls
 	$sqlArgs = 'WHERE `id` = ' . $submissionId;
 	arrayToSql('update', 'submissions', $inputArray, $sqlArgs);
 }
-function expireRoom ($roomId) { // Expires a room imidiatlly
-	// IN PROGRESS ----------------------------------------------------
+function expireRoom($roomId) { // Expires a room imidiatlly
+	global $conn;
+	$sql = 'UPDATE `rooms` SET `expires` = CURRENT_TIMESTAMP WHERE `id` = ' . $roomId . ';';
+	mysqli_query($conn, $sql);
+}
+function loadConfig() { // Loads config into an array
+	global $conn;
+	$sql = "SELECT `name`,`value` FROM `config` ;";
+	$sqlData = mysqli_query($conn, $sql);
+	if (!($sqlData)) {
+		return $sqlData;
+	}
+	while($row = mysqli_fetch_assoc($sqlData)) {
+		$returnData[$row['name']] = $row['value'];
+	}
+	if (!empty($returnData)) {
+		return $returnData;
+	}
+	else {
+		return 0;
+	}
 }
 function sqlToArray ($table,$cols,$sqlArgs) { // Function makes an SQL querey and returns results in a 3D array sqlToArray (<SQL TABLE>,<COLUMNS DESIRED or * for all>,<SQL ARGS such as ORDER BY name>) [<RESULT NUM>][COL NAME] = VALUE
 	global $conn;

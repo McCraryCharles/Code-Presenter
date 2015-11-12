@@ -4,7 +4,6 @@
 	An open source project coded by Charles McCrary https://github.com/McCraryCharles/ */	
 	
 	// This file loads the correct page based on the URL / Host cookie
-	
 	if(isset($_POST["g-recaptcha-response"]) && !isset($_COOKIE['userKey']) && !isset($_COOKIE['hostId'])){
 		$captcha = $_POST["g-recaptcha-response"];
 		include_once 'php/pages/home/captchaKey.php'; // File contains captcha key
@@ -27,6 +26,7 @@
 	if(isset($_GET['room'])) { // If a room id was entered
 		$roomCode = strtoupper($_GET['room']); // Set the room id variable
 		include_once "php/db/dbLibrary.php"; // Include database library
+		$config = loadConfig(); // Load the config file
 		$roomId = getRoomId($roomCode); // Get the room id, if code is invalid will set to false
 		if (isset($_COOKIE['hostId'])) { // If a host cookie is set
 			$hostId = strtoupper($_COOKIE['hostId']);

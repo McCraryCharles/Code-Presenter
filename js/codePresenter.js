@@ -11,18 +11,18 @@ var lastUpdate; // Variable to store last database update time
 var roomType; // Variable to store type of room loaded (host or user)
 var roomId; // Variable to store the current room id;
 
-function initRoomUpdates(roomIdIn, roomTypeIn) {
+function initRoomUpdates(roomTypeIn, roomIdIn, roomUpdateInterval, expireUpdateInterval) {
 	roomType = roomTypeIn;
 	roomId = roomIdIn;
 	ajax('php/db/ajaxHandler.php', 'function=checkRoomUpdate&roomId=' + roomId, initLastUpdate); // Inits lastUpdate var
 	switch (roomType) {
 		case 'host':
-			window.setInterval(function () {checkRoomUpdate(roomId);}, 2000); // Starts checking for updates every 2 seconds
-			window.setInterval(function () {checkRoomExpire();}, 60000); // Starts checking for expiration every 60 seconds
+			window.setInterval(function () {checkRoomUpdate(roomId);}, roomUpdateInterval); // Starts checking for updates
+			window.setInterval(function () {checkRoomExpire();}, expireUpdateInterval); // Starts checking for expiration
 			break;
 		case 'user':
-			window.setInterval(function () {checkRoomUpdate(roomId);}, 5000); // Starts checking for updates every 5 seconds
-			window.setInterval(function () {checkUserExpire();}, 60000); // Starts checking for expiration every 60 seconds
+			window.setInterval(function () {checkRoomUpdate(roomId);}, roomUpdateInterval); // Starts checking for updates
+			window.setInterval(function () {checkUserExpire();}, expireUpdateInterval); // Starts checking for expiration
 			break;
 	}
 }
@@ -158,7 +158,7 @@ function newSubmission() { // Prompts user for new submission name
 	document.getElementById('rename-input').value = '';
 	document.getElementById('rename-input').placeholder = 'New Submission';
 	document.getElementById('naming-button').innerHTML = 'Create';
-	document.getElementById('naming-button').onclick = createSubmission;
+	document.getElementById('name-modal-form').onsubmit = createSubmission;
 	$('#rename-submission-modal').modal({ // Disable backdrop closing of modal
   		backdrop: false,
 		keyboard: true
@@ -170,11 +170,16 @@ function createSubmission() { // Creates a new submission for the user
 	var userKey = getCookie('userKey');
 	$('#rename-submission-modal').modal('hide');
 	var name = document.getElementById('rename-input').value;
+  	if (name === "") {
+		alert("Please enter a name for your submission.");
+		return false;
+	}
 	ajax('php/db/ajaxHandler.php', 'function=newSubmission&userKey=' + userKey + '&name=' + name, loadUserSubmissionsNew);
 	normalizeRenameModal();
+	return false;
 }
 function normalizeRenameModal() { // Restores body of rename modal after 1 sec
-	window.setTimeout(function () {document.getElementById('rename-submission-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Name file:</h4><br /><form id="name-modal-form" onsubmit="return false"><div class="form-group"><input type="text" class="form-control input-center" id="rename-input" placeholder="First Last"></div><button type="button" id="naming-button" class="btn btn-primary pull-right" onclick="renameSubmission()">Save</button><button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button><span class="clearfix"></span></form>';}, 1000);
+	window.setTimeout(function () {document.getElementById('rename-submission-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Name file:</h4><br /><form id="name-modal-form" onsubmit="return renameSubmission()"><div class="form-group"><input type="text" class="form-control input-center" id="rename-input" placeholder="First Last"></div><button type="submit" id="naming-button" class="btn btn-primary pull-right">Save</button><button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button><span class="clearfix"></span></form>';}, 1500);
 }
 function toggleSidebar(){ // Toggels the sidebar in and out on the host page
 	if (document.getElementById('host-sidebar').className == 'host-sidebar') {
@@ -195,6 +200,10 @@ function promptUser(){ // Prompts user to input username
 }
 function createUser(){ // Gets user name from input field, and creates a user in the DB
 	var userName = document.getElementById('name-input').value; // Get user name value
+	if (userName === "") {
+		alert("Please enter your first and last name.");
+		return false;
+	}
 	var roomCode = document.getElementById('room-code').value; // Get room code value
 	ajax('php/db/ajaxHandler.php', 'function=createUser&roomCode=' + roomCode + '&userName=' + userName, userCreated);
 	// Change prompt modal to creating user + loading animation
@@ -223,13 +232,17 @@ function showRename() {
 		keyboard: true
 	});
 	document.getElementById('naming-button').innerHTML = 'Save';
-	document.getElementById('naming-button').onclick = renameSubmission;
+	document.getElementById('name-modal-form').onsubmit = renameSubmission;
 	$('#rename-submission-modal').modal('show');
 	document.getElementById('rename-input').focus();
 }
 function renameSubmission() { // Called on click of the save button in the submission rename modal
 	// Get new name value
 	var name = document.getElementById('rename-input').value;
+	if (name === "") {
+		alert("Please enter a submission name.");
+		return false;
+	}
 	// Change prompt modal to renaming submission + loading animation
 	document.getElementById('rename-submission-modal-body').innerHTML = '<center><i class="fa fa-circle-o-notch fa-spin fa-3x loading-text"></i><br /><span class="loading-text">Renaming Submission...</span><span class="clearfix"></span>';
 	ajax('php/db/ajaxHandler.php', 'function=renameSubmission&submissionId=' + loadedSubmission + '&name=' + name + '&roomId=' + roomId, submissionRenamed);
@@ -288,7 +301,7 @@ function submissionPublished(response) { // Called after a submission is saved
 }
 function confirmDelete() { // Called when the delete button is pressed, confirms a submission deletion
 	document.getElementById('confirm-button').innerHTML = 'Delete';
-	document.getElementById('confirm-button').onclick = deleteSubmission;
+	document.getElementById('confirm-modal-form').onsubmit = deleteSubmission;
 	document.getElementById('confirm-dialog').innerHTML = 'Are you sure you would like to delete "' + document.getElementById('code-title').innerHTML + '"?';
 	$('#user-confirm-modal').modal({ // Disable backdrop closing of modal
   		backdrop: false,
@@ -312,7 +325,7 @@ function submissionDeleted(response) {
 	window.setTimeout(function () {$('#user-confirm-modal').modal('hide');}, 1000);
 	loadUserSubmissions(getCookie('userKey')); // Updates sidebar
 	// Restores body of rename modal
-	window.setTimeout(function () {document.getElementById('user-confirm-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Confirm:</h4><form  onsubmit="return false"><div id="confirm-dialog"></div><button type="button" id="confirm-button" class="btn btn-primary pull-right" onclick="">Yes</button><button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button><span class="clearfix"></span></form>';}, 1500);
+	window.setTimeout(function () {document.getElementById('user-confirm-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Confirm:</h4><form  onsubmit="return false"><div id="confirm-dialog"></div><button type="button" id="confirm-button" class="btn btn-primary pull-right">Yes</button><button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button><span class="clearfix"></span></form>';}, 1500);
 }
 function checkRoomExpire() { // Checks room id for session expiration
 	ajax('php/db/ajaxHandler.php', 'function=checkRoomExpire&roomId=' + roomId, checkExpire);
