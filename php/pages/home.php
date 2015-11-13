@@ -22,7 +22,7 @@
 					<input type="text" id="codeEntry" class="form-control selection-box-content-element" placeholder="Room Code">
 					<input type="hidden" id="new-room-form" name="new-room" value="false" class="hidden">
 				</div>
-				<div class="selection-box-content-row">
+				<div class="selection-box-content-row<?php if ($config['captcha']=='false') {echo ' hidden';}?>">
 					<div class="captcha-cont">
 						<div class="g-recaptcha captcha" data-sitekey="6LeONhATAAAAAJF5yyMxKUOAwGTCUecQRxY6qE0F"></div>
 					</div>

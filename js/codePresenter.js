@@ -171,7 +171,9 @@ function createSubmission() { // Creates a new submission for the user
 	$('#rename-submission-modal').modal('hide');
 	var name = document.getElementById('rename-input').value;
   	if (name === "") {
-		alert("Please enter a name for your submission.");
+		document.getElementById('rename-submission-error').innerHTML = 'Please enter a submission name'; // Insert error text
+		document.getElementById('rename-submission-error').className = 'modal-error'; // Display modal error
+		document.getElementById('rename-input').focus(); // Focus field
 		return false;
 	}
 	ajax('php/db/ajaxHandler.php', 'function=newSubmission&userKey=' + userKey + '&name=' + name, loadUserSubmissionsNew);
@@ -201,7 +203,15 @@ function promptUser(){ // Prompts user to input username
 function createUser(){ // Gets user name from input field, and creates a user in the DB
 	var userName = document.getElementById('name-input').value; // Get user name value
 	if (userName === "") {
-		alert("Please enter your first and last name.");
+		document.getElementById('create-user-error').innerHTML = 'Please enter your first and last name'; // Insert error text
+		document.getElementById('create-user-error').className = 'modal-error'; // Display modal error
+		document.getElementById('name-input').focus(); // Focus field
+		return false;
+	}
+	if (userName.split(' ').length < 2 || userName.split(' ')[1] === "") {
+		document.getElementById('create-user-error').innerHTML = 'Please enter your first <b>and last</b> name'; // Insert error text
+		document.getElementById('create-user-error').className = 'modal-error'; // Display modal error
+		document.getElementById('name-input').focus(); // Focus field
 		return false;
 	}
 	var roomCode = document.getElementById('room-code').value; // Get room code value
@@ -240,7 +250,9 @@ function renameSubmission() { // Called on click of the save button in the submi
 	// Get new name value
 	var name = document.getElementById('rename-input').value;
 	if (name === "") {
-		alert("Please enter a submission name.");
+		document.getElementById('rename-submission-error').innerHTML = 'Please enter a submission name'; // Insert error text
+		document.getElementById('rename-submission-error').className = 'modal-error'; // Display modal error
+		document.getElementById('rename-input').focus(); // Focus field
 		return false;
 	}
 	// Change prompt modal to renaming submission + loading animation
