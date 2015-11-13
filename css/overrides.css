@@ -67,8 +67,34 @@
 	border-color: #FF6961;
 }
 .btn-danger:hover {
-	background-color: #FF6961;
-	border-color: #FF6961;
+	background-color: #EF5951;
+	border-color: #EF5951;
+}
+.btn-warning {
+	background-color: #f0ad4e;
+	border-color: #f0ad4e;
+}
+.btn-warning:hover {
+	background-color: #E09d3e;
+	border-color: #E09d3e;
+}
+.btn-outline {
+	color: inherit;
+	background-color: transparent;
+	border-width: 2px;
+}
+.btn-outline:hover {
+	color: #fff !important;
+	border-width: 2px;
+}
+.btn-default.btn-outline {
+	color: #058dbc;
+}
+.btn-danger.btn-outline {
+	color: #FF6961;
+}
+.btn-warning.btn-outline {
+	color: #f0ad4e;
 }
 .btn-invert {
 	background-color: transparent;

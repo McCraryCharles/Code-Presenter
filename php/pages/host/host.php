@@ -9,5 +9,6 @@
 <?php include_once 'php/pages/host/sidebar.php'; ?>
 <?php include_once 'php/pages/host/viewer.php'; ?>
 <?php include_once 'php/pages/host/footer.php'; ?>
+<div id="hostModals"><?php include_once 'php/pages/host/hostModals.php'; ?></div>
 <script>initRoomUpdates('host',<?php echo $roomId .','. $config['hostUpdateInterval'] .','.  $config['expireUpdateInterval']; ?>);</script>
 <script>ga('set', 'page', '/host');ga('send', 'pageview');</script>

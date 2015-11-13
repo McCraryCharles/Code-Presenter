@@ -23,8 +23,8 @@
 		?>
 	</div>
 	<div class="host-sidebar-footer">
-		<a type="button" id="roomButton" class="btn btn-default btn-invert nav-button" onclick="clearSubmissions(<?php echo $roomId; ?>)">Clear</a>
-		<a type="button" id="roomButton" class="btn btn-default btn-invert nav-button">New Scratch Pad</a>
-		<a type="button" id="roomButton" class="btn btn-default btn-invert nav-button">Menu</a>
+		<a type="button" id="roomButtonClear" class="btn btn-default btn-invert nav-button" onclick="clearSubmissions(<?php echo $roomId; ?>)">Clear</a>
+		<a type="button" id="roomButtonScratch" class="btn btn-default btn-invert nav-button">New Scratch Pad</a>
+		<a type="button" id="roomButtonMenu" class="btn btn-default btn-invert nav-button" data-toggle="modal" data-target="#host-menu-modal">Menu</a>
 	</div>
 </div>

@@ -167,8 +167,6 @@ function newSubmission() { // Prompts user for new submission name
 	document.getElementById('rename-input').focus();
 }
 function createSubmission() { // Creates a new submission for the user
-	var userKey = getCookie('userKey');
-	$('#rename-submission-modal').modal('hide');
 	var name = document.getElementById('rename-input').value;
   	if (name === "") {
 		document.getElementById('rename-submission-error').innerHTML = 'Please enter a submission name'; // Insert error text
@@ -176,12 +174,14 @@ function createSubmission() { // Creates a new submission for the user
 		document.getElementById('rename-input').focus(); // Focus field
 		return false;
 	}
+	var userKey = getCookie('userKey');
+	$('#rename-submission-modal').modal('hide');
 	ajax('php/db/ajaxHandler.php', 'function=newSubmission&userKey=' + userKey + '&name=' + name, loadUserSubmissionsNew);
 	normalizeRenameModal();
 	return false;
 }
 function normalizeRenameModal() { // Restores body of rename modal after 1 sec
-	window.setTimeout(function () {document.getElementById('rename-submission-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Name file:</h4><br /><form id="name-modal-form" onsubmit="return renameSubmission()"><div class="form-group"><input type="text" class="form-control input-center" id="rename-input" placeholder="First Last"></div><button type="submit" id="naming-button" class="btn btn-primary pull-right">Save</button><button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button><span class="clearfix"></span></form>';}, 1500);
+	window.setTimeout(function () {document.getElementById('rename-submission-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Name file:</h4><br /><form id="name-modal-form" onsubmit="return renameSubmission()"><div class="form-group" id="rename-submission-form-group"><div class="modal-error hidden" id ="rename-submission-error" role="alert"></div><input type="text" class="form-control input-center" id="rename-input" placeholder="First Last"></div><button type="submit" id="naming-button" class="btn btn-primary pull-right">Save</button><button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button><span class="clearfix"></span></form>';}, 1500);
 }
 function toggleSidebar(){ // Toggels the sidebar in and out on the host page
 	if (document.getElementById('host-sidebar').className == 'host-sidebar') {
@@ -337,7 +337,7 @@ function submissionDeleted(response) {
 	window.setTimeout(function () {$('#user-confirm-modal').modal('hide');}, 1000);
 	loadUserSubmissions(getCookie('userKey')); // Updates sidebar
 	// Restores body of rename modal
-	window.setTimeout(function () {document.getElementById('user-confirm-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Confirm:</h4><form  onsubmit="return false"><div id="confirm-dialog"></div><button type="button" id="confirm-button" class="btn btn-primary pull-right">Yes</button><button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button><span class="clearfix"></span></form>';}, 1500);
+	window.setTimeout(function () {document.getElementById('user-confirm-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Confirm:</h4><form id="confirm-modal-form" onsubmit="return false"><div class="modal-error hidden" id ="rename-submission-error" role="alert"></div><div id="confirm-dialog"></div><button type="submit" id="confirm-button" class="btn btn-primary pull-right">Yes</button><button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button><span class="clearfix"></span></form>';}, 1500);
 }
 function checkRoomExpire() { // Checks room id for session expiration
 	ajax('php/db/ajaxHandler.php', 'function=checkRoomExpire&roomId=' + roomId, checkExpire);

@@ -22,7 +22,7 @@
 
 <!---------------------------------- SUBMISSION NAMING MODAL ---------------------------------->
 
-<div class="modal fade" id="rename-submission-modal" role="dialog" aria-labelledby="create-user-modal">
+<div class="modal fade" id="rename-submission-modal" role="dialog" aria-labelledby="rename-modal">
 	<div class="modal-dialog modal-sm modal-center" role="document">
 		<div class="modal-content">
 			<div class="modal-body" id="rename-submission-modal-body">
@@ -45,7 +45,7 @@
 
 <!---------------------------------- USER CONFIRM MODAL ---------------------------------->
 
-<div class="modal fade" id="user-confirm-modal" role="dialog" aria-labelledby="create-user-modal">
+<div class="modal fade" id="user-confirm-modal" role="dialog" aria-labelledby="user-confirm-modal">
 	<div class="modal-dialog modal-sm modal-center" role="document">
 		<div class="modal-content">
 			<div class="modal-body" id="user-confirm-modal-body">

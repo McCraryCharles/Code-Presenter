@@ -28,6 +28,9 @@ body {
 .btn-wide {
 	width: 100%;
 }
+.btn-pad {
+	margin: 0 5px;
+}
 .btn-group-border {
 	border-left: 0;
 }
@@ -166,6 +169,13 @@ body {
 	left: 0;
 	right: 0;
 }
+.modal-lower {
+	position: fixed;
+	top: 10%;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
 .modal-error {
 	color: #f55;
 	padding-bottom: 3px;
@@ -175,6 +185,9 @@ body {
 }
 
 /* Host CSS */
+#host-menu-form {
+	font-size: 18px;
+}
 .navbar-host {
 	margin: 0;
 	padding: 10px;

@@ -171,6 +171,9 @@ function expireRoom($roomId) { // Expires a room imidiatlly
 	$sql = 'UPDATE `rooms` SET `expires` = CURRENT_TIMESTAMP WHERE `id` = ' . $roomId . ';';
 	mysqli_query($conn, $sql);
 }
+function getExpiration($roomCode) { // Gets the expiration time of the room
+	return sqlToArray ('rooms','expires','WHERE `code` = "' . $roomCode . '"')[0]['expires'];
+}
 function loadConfig() { // Loads config into an array
 	global $conn;
 	$sql = "SELECT `name`,`value` FROM `config` ;";
