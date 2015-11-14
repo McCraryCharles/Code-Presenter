@@ -2,3 +2,4 @@ php/db/connect.php
 php/pages/home/captchaKey.php
 js/analytics.js
 stats/*
+test.php
