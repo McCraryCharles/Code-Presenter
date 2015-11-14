@@ -6,7 +6,6 @@
 	// This file loads the correct page based on the URL / Host cookie
 
 	include_once "php/db/dbLibrary.php"; // Include database library
-	$config = loadConfig(); // Load the config file
 
 	if(isset($_POST["g-recaptcha-response"]) && !isset($_COOKIE['userKey']) && !isset($_COOKIE['hostId']) && $config['captcha']!='false'){
 		$captcha = $_POST["g-recaptcha-response"];

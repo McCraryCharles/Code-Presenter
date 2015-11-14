@@ -135,6 +135,7 @@
 			case 'createUser': // Creates a user
 				$room = checkRoom($_POST['roomCode']);
 				echo createUser($room, $_POST['userName']);
+				echo "," . $config['userCookieExp'];
 			break;
 			case 'createRoom':
 				echo createRoom();

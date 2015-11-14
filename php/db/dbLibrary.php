@@ -8,6 +8,8 @@ An open source project coded by Charles McCrary https://github.com/McCraryCharle
 
 include_once 'connect.php'; // Include the connection file that initiate a connection to the database and stores the object as $conn
 
+$config = loadConfig(); // Load the config file
+
 function updateRoom($roomId) {
 	global $conn;
 	$sql = "UPDATE `rooms` SET `updated` = CURRENT_TIMESTAMP WHERE `id` = " . $roomId . ";";
@@ -71,9 +73,10 @@ function createRoom() {
 	}
 	while (checkHost($hostId)); // Check for a duplicate key
 	global $conn;
-	$sql = "INSERT INTO `rooms` (`code`, `host`, `updated`, `expires`) VALUES ('".$roomId."', '".$hostId."', CURRENT_TIMESTAMP, DATE_ADD(NOW(), INTERVAL 12 HOUR));";
+	global $config;
+	$sql = "INSERT INTO `rooms` (`code`, `host`, `updated`, `expires`) VALUES ('".$roomId."', '".$hostId."', CURRENT_TIMESTAMP, DATE_ADD(NOW(), INTERVAL ".$config['roomExpTime']."));";
 	mysqli_query($conn, $sql);
-	setcookie("hostId", $hostId, time()+(3600*12)); // Set host cookie for 12 hours
+	setcookie("hostId", $hostId, time()+(3600*$config['hostCookieExp'])); // Set host cookie for 12 hours
 	return $roomId;
 }
 function createUser($room, $name) {

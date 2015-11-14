@@ -220,9 +220,11 @@ function createUser(){ // Gets user name from input field, and creates a user in
 	document.getElementById('create-user-modal-body').innerHTML = '<center><i class="fa fa-circle-o-notch fa-spin fa-3x loading-text"></i><br /><span class="loading-text">Creating User...</span><span class="clearfix"></span>';
 	return false; // Prevent browser reloading on enter key press
 }
-function userCreated(userKey){ // After user is created
+function userCreated(response){ // After user is created
+	var userKey = response.split(',')[0];
+	var userExpTime = response.split(',')[1];
 	// Set user key
-	setCookie('userKey', userKey, 12);
+	setCookie('userKey', userKey, userExpTime);
 	// Change modal to user created
 	document.getElementById('create-user-modal-body').innerHTML = '<center><i class="fa fa-check fa-3x loading-text"></i><br /><span class="loading-text">User Created!</span><span class="clearfix"></span>';
 	// Close modal
