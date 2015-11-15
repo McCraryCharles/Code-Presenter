@@ -1,5 +1,5 @@
 # CodePresenter
-A simple, educational tool designed to engage student participation through real-time code collaboration in lectures.
+A simple educational tool, designed to engage student participation through real-time code collaboration.
 
 ## Usage
 CodePresenter is centered around simplicity and ease of use
