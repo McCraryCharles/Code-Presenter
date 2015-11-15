@@ -45,10 +45,10 @@
 
 <!---------------------------------- USER CONFIRM MODAL ---------------------------------->
 
-<div class="modal fade" id="user-confirm-modal" role="dialog" aria-labelledby="user-confirm-modal">
+<div class="modal fade" id="confirm-modal" role="dialog" aria-labelledby="confirm-modal">
 	<div class="modal-dialog modal-sm modal-center" role="document">
 		<div class="modal-content">
-			<div class="modal-body" id="user-confirm-modal-body">
+			<div class="modal-body" id="confirm-modal-body">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h4 class="modal-title" id="nameEntryLabel">Confirm:</h4>
 				<form id="confirm-modal-form" onsubmit="return false">

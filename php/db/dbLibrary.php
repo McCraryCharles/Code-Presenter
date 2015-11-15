@@ -122,6 +122,14 @@ function loadUserSubmissions($userKey) {// Loads array of submissions for a user
 function loadSubmission($submissionId) { // Loads a specific submission
 	return sqlToArray ('submissions','*','WHERE `id` = ' . $submissionId);
 }
+function loadScratchPad($roomId) { // Loads the scratchpad of a specific room
+	return sqlToArray ('rooms','scratchPad','WHERE `id` = ' . $roomId);
+}
+function updateScratchPad($roomId, $content) { // Saves content to a rooms scratch pad
+	global $conn;
+	$sql = 'UPDATE `rooms` SET `scratchPad` = "' . htmlspecialchars($content) . '" WHERE `id` = ' . $roomId . ';';
+	mysqli_query($conn, $sql);
+}
 function getLatestSubmissionId ($userKey) {
 	$userId = sqlToArray ('users','id','WHERE `userKey` = "' . $userKey . '"')[0]['id'];
 	return sqlToArray ('submissions','id','WHERE `user` = ' . $userId . ' ORDER BY `updated` DESC LIMIT 0 , 1')[0]['id'];

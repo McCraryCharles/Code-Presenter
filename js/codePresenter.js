@@ -84,11 +84,54 @@ function leaveRoom() { // Called to leave a room and load the home page
 }
 function loadSubmission(submissionId) { // Single submission for host
 	ajaxToIdValue('php/db/ajaxHandler.php', 'function=loadSubmissionCode&submissionId=' + submissionId, 'code-box');
+	loadedSubmission = submissionId; // Save current submission
+	selectHostSidebar(submissionId); // Select the sidebar item
+	// Show refresh button / hide save button
+	$('#host-refresh-button').removeClass('hidden');
+	$('#host-save-button').addClass('hidden');
+}
+function refreshSubmission() {
+	ajaxToIdValue('php/db/ajaxHandler.php', 'function=loadSubmissionCode&submissionId=' + loadedSubmission, 'code-box');
+}
+function loadScratchPad() { // Single submission for host
+	ajaxToIdValue('php/db/ajaxHandler.php', 'function=loadScratchPad&roomId=' + roomId, 'code-box'); // Loads content into code box
+	// Show Save Button / hide refresh button
+	$('#host-save-button').removeClass('hidden');
+	$('#host-refresh-button').addClass('hidden');
+	$('#host-save-button').popover({
+		content: 'Save',
+		trigger: 'hover',
+		placement: 'top',
+		selector: 'scratch-save'
+	});
+	$("#roomButtonScratch").addClass('btn-invert-active');
+	$('#host-sidebar-content').children().removeClass('host-sidebar-selected');
+}
+function saveScratchPad() {
+	// Disable save button
+	$('#host-save-button').attr('disabled', 'disabled');
+	// AJAX call to save the submission
+	var content = document.getElementById('code-box').value;
+	ajax('php/db/ajaxHandler.php', 'function=saveScratchPad&content=' + content + '&roomId=' + roomId, scratchPadSaved);
+	document.getElementById('host-save-status').innerHTML = 'Saving...';
+	$('#host-save-status').removeClass('fade-status');
+}
+function scratchPadSaved() {
+	document.getElementById('host-save-status').innerHTML = 'Saved';
+	// Re-enable save button
+	window.setTimeout(function () {$('#host-save-button').removeAttr('disabled');}, 500);
+	//document.getElementById('host-save-status').innerHTML = '';
+	window.setTimeout(function () {$('#host-save-status').addClass('fade-status');}, 1000);
 }
 function loadUserSubmission(submissionId) { // Single submission on the user page
 	loadUserEditor(submissionId);
-	loadedSubmission = submissionId;
+	loadedSubmission = submissionId; // Save current submission
 	selectSidebar(submissionId);
+}
+function selectHostSidebar(submissionId) { // Hilights a sidebar item and enables sidebar controls for the host interface
+	$('#host-sidebar-content').children().removeClass('host-sidebar-selected');
+	$("#host-submission-tab-" + submissionId).addClass('host-sidebar-selected');
+	$("#roomButtonScratch").removeClass('btn-invert-active');
 }
 function selectSidebar(submissionId) { // Hilights a sidebar item and enables sidebar controls
 	$('#rename-button').removeAttr('disabled');
@@ -230,12 +273,24 @@ function userCreated(response){ // After user is created
 	// Close modal
 	window.setTimeout(function () {$('#create-user-modal').modal('hide');}, 1000);
 }
-function clearSubmissions(roomId) { // Clears all submissions for a room by setting them to unpublished
-	if (confirm('Are you sure you want to unpublish all submissions?')) {
-		ajax('php/db/ajaxHandler.php', 'function=clearSubmissions&roomId=' + roomId, loadSubmissions);
-	}
+function confirmClearSubmissions() { // Shows clear submission prompt
+	confirmModal('Are you sure you want to unpublish all submissions?', 'Clear', clearSubmissions);
 }
-function showRename() {
+function clearSubmissions() { // Clears all submissions for a room by setting them to unpublished
+	document.getElementById('confirm-modal-body').innerHTML = '<center><i class="fa fa-circle-o-notch fa-spin fa-3x loading-text"></i><br /><span class="loading-text">Clearing Submission...</span><span class="clearfix"></span>';
+	ajax('php/db/ajaxHandler.php', 'function=clearSubmissions&roomId=' + roomId, submissionsCleared);
+	return false; // Prevent page reloading
+}
+function submissionsCleared() {
+	loadSubmissions(); // Reload submissions
+	// Change modal to submission deleted
+	document.getElementById('confirm-modal-body').innerHTML = '<center><i class="fa fa-check fa-3x loading-text"></i><br /><span class="loading-text">Submissions Cleared!</span><span class="clearfix"></span>';
+	// Close modal
+	window.setTimeout(function () {$('#confirm-modal').modal('hide');}, 1000);
+	// Restores body of modal
+	restoreConfirmModal();
+}
+function showRename() { // Shows the rename modal
 	if ($('#rename-button').attr('disabled') == 'disabled'){return 0;} // If button is disabled, do not run the function
 	document.getElementById('rename-input').value = '';
 	document.getElementById('rename-input').placeholder = document.getElementById('code-title').innerHTML;
@@ -276,7 +331,7 @@ function saveSubmission() { // Saves the current submission
 	$('#save-button').attr('disabled', 'disabled');
 	// Set last-save to saving
 	document.getElementById('last-save').innerHTML = 'Saving... <i class="fa fa-circle-o-notch fa-spin"></i>';
-	// AJAX call to delete the submission
+	// AJAX call to save the submission
 	var content = document.getElementById('code-box').value;
 	ajax('php/db/ajaxHandler.php', 'function=saveSubmission&submissionId=' + loadedSubmission + '&content=' + content + '&roomId=' + roomId, submissionSaved());
 }
@@ -314,32 +369,28 @@ function submissionPublished(response) { // Called after a submission is saved
 	loadUserSubmissions(getCookie('userKey')); // Updates sidebar
 }
 function confirmDelete() { // Called when the delete button is pressed, confirms a submission deletion
-	document.getElementById('confirm-button').innerHTML = 'Delete';
-	document.getElementById('confirm-modal-form').onsubmit = deleteSubmission;
-	document.getElementById('confirm-dialog').innerHTML = 'Are you sure you would like to delete "' + document.getElementById('code-title').innerHTML + '"?';
-	$('#user-confirm-modal').modal({ // Disable backdrop closing of modal
-  		backdrop: false,
-		keyboard: true
-	});
-	$('#user-confirm-modal').modal('show');
+	confirmModal('Are you sure you would like to delete "' + document.getElementById('code-title').innerHTML + '"?','Delete', deleteSubmission);
 }
 function deleteSubmission() {
 	// If submission is loaded in editor, unload it, disable editor and save/publish buttons
 	unloadUserEditor();
 	// Change prompt modal to deleting submission + loading animation
-	document.getElementById('user-confirm-modal-body').innerHTML = '<center><i class="fa fa-circle-o-notch fa-spin fa-3x loading-text"></i><br /><span class="loading-text">Deleting Submission...</span><span class="clearfix"></span>';
+	document.getElementById('confirm-modal-body').innerHTML = '<center><i class="fa fa-circle-o-notch fa-spin fa-3x loading-text"></i><br /><span class="loading-text">Deleting Submission...</span><span class="clearfix"></span>';
 	// AJAX call to delete the submission
 	ajax('php/db/ajaxHandler.php', 'function=deleteSubmission&submissionId=' + loadedSubmission + '&roomId=' + roomId, submissionDeleted());
 	return false; // Prevent browser reloading on enter key press
 }
 function submissionDeleted(response) {
 	// Change modal to submission deleted
-	document.getElementById('user-confirm-modal-body').innerHTML = '<center><i class="fa fa-check fa-3x loading-text"></i><br /><span class="loading-text">Submission Deleted!</span><span class="clearfix"></span>';
+	document.getElementById('confirm-modal-body').innerHTML = '<center><i class="fa fa-check fa-3x loading-text"></i><br /><span class="loading-text">Submission Deleted!</span><span class="clearfix"></span>';
 	// Close modal
-	window.setTimeout(function () {$('#user-confirm-modal').modal('hide');}, 1000);
+	window.setTimeout(function () {$('#confirm-modal').modal('hide');}, 1000);
 	loadUserSubmissions(getCookie('userKey')); // Updates sidebar
-	// Restores body of rename modal
-	window.setTimeout(function () {document.getElementById('user-confirm-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Confirm:</h4><form id="confirm-modal-form" onsubmit="return false"><div class="modal-error hidden" id ="rename-submission-error" role="alert"></div><div id="confirm-dialog"></div><button type="submit" id="confirm-button" class="btn btn-primary pull-right">Yes</button><button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button><span class="clearfix"></span></form>';}, 1500);
+	// Restores body of modal
+	restoreConfirmModal();
+}
+function restoreConfirmModal() {
+	window.setTimeout(function () {document.getElementById('confirm-modal-body').innerHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="nameEntryLabel">Confirm:</h4><form id="confirm-modal-form" onsubmit="return false"><div class="modal-error hidden" id ="rename-submission-error" role="alert"></div><div id="confirm-dialog"></div><button type="submit" id="confirm-button" class="btn btn-primary pull-right">Yes</button><button type="button" class="btn btn-primary btn-invert-b pull-right" data-dismiss="modal">Cancel</button><span class="clearfix"></span></form>';}, 1500);
 }
 function checkRoomExpire() { // Checks room id for session expiration
 	ajax('php/db/ajaxHandler.php', 'function=checkRoomExpire&roomId=' + roomId, checkExpire);
@@ -353,14 +404,26 @@ function checkExpire(response) { // Notifies of expired session if session is mi
 	}
 }
 function sessionExpired() { // Called when session has expired
-	document.getElementById('user-confirm-modal-body').innerHTML = '<h4 class="modal-title" id="nameEntryLabel">Your Session Has Expired</h4><form id="confirm-modal-form" action="." method="POST"><div id="confirm-dialog">Click exit to leave the room.</div><button type="submit" id="confirm-button" class="btn btn-primary pull-right" onclick="">Exit</button><span class="clearfix"></span></form>';
-	$('#user-confirm-modal').modal({ // Disable backdrop closing of modal
+	document.getElementById('confirm-modal-body').innerHTML = '<h4 class="modal-title" id="nameEntryLabel">Your Session Has Expired</h4><form id="confirm-modal-form" action="." method="POST"><div id="confirm-dialog">Click exit to leave the room.</div><button type="submit" id="confirm-button" class="btn btn-primary pull-right" onclick="">Exit</button><span class="clearfix"></span></form>';
+	$('#confirm-modal').modal({ // Disable backdrop closing of modal
   		backdrop: "static",
 		keyboard: true
 	});
-	$('#user-confirm-modal').modal('show');
+	$('#confirm-modal').modal('show');
 	expireCookie('userKey');
 	expireCookie('hostId');
+}
+function confirmModal(text, buttonText, cb) { // Displays a confirmation modal and calls the assigned callback if confirmed
+	document.getElementById('confirm-button').innerHTML = buttonText;
+	if ( typeof cb === 'function' ) { // If arg "cb" was a function
+		document.getElementById('confirm-modal-form').onsubmit = cb; // Assign it to the confirm button
+	}
+	document.getElementById('confirm-dialog').innerHTML = text;
+	$('#confirm-modal').modal({ // Disable backdrop closing of modal
+  		backdrop: false,
+		keyboard: true
+	});
+	$('#confirm-modal').modal('show');
 }
 function getCookie(name) { // Gets the value of a cookie by name
 	var value = "; " + document.cookie;

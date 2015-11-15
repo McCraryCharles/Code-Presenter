@@ -293,7 +293,7 @@ body {
 	-o-transition: background-color 0.25s;
     transition: background-color 0.25s;
 }
-.submission-tab:hover {
+.submission-tab:hover, .host-sidebar-selected  {
 	background-color: #fff;
 	background-color: rgba(255,255,255,1);
 	cursor: pointer;
@@ -385,7 +385,34 @@ body {
 	outline: 0;
 	resize: none;
 }
-
+#host-code-block-menu {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+}
+#host-code-block-menu > .host-editor-btn {
+	margin-left: -5px;
+	color: #555;
+	background-color: transparent;
+	border-color: #777;
+	border-width: 2px;
+	border-radius: 1px;
+	font-size: 18px;
+	padding: 0 6px;
+}
+#host-refresh-button {
+	border: 0;
+}
+#host-save-status {
+	font-size: 14px;
+	color: #777;
+	font-weight: 500;
+	font-family: 'Open Sans', sans-serif;
+}
+.fade-status {
+	opacity: 0;
+    transition: opacity 1.25s;
+}
 /* user CSS */
 
 .loading-text {

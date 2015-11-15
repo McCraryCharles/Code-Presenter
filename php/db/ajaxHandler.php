@@ -28,6 +28,14 @@
 				$submission = loadSubmission($_POST['submissionId']);
 				echo $submission[0]['published'];
 			break;
+			case 'loadScratchPad': // Loads the room's scratch pad
+				$submission = loadScratchPad($_POST['roomId']);
+				echo htmlspecialchars_decode($submission[0]['scratchPad']);
+			break;
+			case 'saveScratchPad': // Saves rooms scratch pad content
+				updateScratchPad($_POST['roomId'], $_POST['content']);
+				// updateRoom($_POST['roomId']); // Updates the room update var // At this point there is no reason for this
+			break;
 			case 'newSubmission': // Create a new submission
 				$userId = getUserId($_POST['userKey']);
 				if (userSubmissionNum($userId) < 5) {
