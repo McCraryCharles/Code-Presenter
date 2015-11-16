@@ -106,6 +106,7 @@ function loadScratchPad() { // Single submission for host
 	});
 	$("#roomButtonScratch").addClass('btn-invert-active');
 	$('#host-sidebar-content').children().removeClass('host-sidebar-selected');
+	document.getElementById('code-box').focus();
 }
 function saveScratchPad() {
 	// Disable save button

@@ -23,8 +23,13 @@
 .navbar-default .navbar-toggle {
 	border-color: #fff;
 }
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
+	color: #fff;
+	background-color: transparent;
+}
 .well {
 	background-color: #fff;
+	box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.25);
 }
 .btn {
 	border-width: 3px;
@@ -139,4 +144,10 @@
 }
 .modal-body > form > button {
 	margin-left: 10px;
+}
+.affix {
+	top: 20px;
+}
+.affix-bottom {
+	
 }

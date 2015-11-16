@@ -19,8 +19,7 @@
 		<div class="pull-right">
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li <?php if ($page == 'about') {echo 'class="active"';} ?>><a href=".?page=about">About</a></li>
-					<li><a type="button" id="roomButton" class="btn btn-default btn-invert nav-button" onclick="createRoom()">Create Room</a></li>
+					<li><a type="button" id="hoomButton" class="" href=".">Back <i class="fa fa-arrow-right"></i></a></li>
 				</ul>
 			</div>
 		</div>

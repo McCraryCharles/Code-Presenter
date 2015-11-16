@@ -38,7 +38,6 @@ body {
 	color: #159dcc;
 	max-width: 402px;
 	margin: 100px auto;
-	box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.25);
 }
 .selection-box-title {
 	font-weight: 700;
@@ -109,6 +108,10 @@ body {
 	color: inherit;
 	font-weight: bold;
 	text-decoration: none;
+}
+.static-footer {
+	position: static;
+	padding: 20px 0;
 }
 .invert-footer {
 	color: #159dcc;
@@ -182,6 +185,63 @@ body {
 }
 .input-center {
 	text-align: center;
+}
+/* About Page */
+.about-content-box {
+	color: #222;
+	position: relative;
+}
+.about-intro {
+	text-align: center;
+	color: #777;
+}
+.about-logo {
+	color: #159dcc;
+}
+.about-tagline {
+	font-size: 16px;
+}
+.about-sidebar {
+	
+}
+.about-sidenav > li > a {
+	display: block;
+	padding: 5px 15px;
+	font-weight: 500;
+	color: #fff;
+}
+.about-sidenav > li > ul > li > a {
+	display: block;
+	padding: 5px 30px;
+	font-weight: 500;
+	color: #fff;
+	font-size: 13px;
+}
+.about-sidenav > li > a:hover, .about-sidenav > li > ul > li > a:hover {
+	background-color: transparent;
+	border-left: 1px solid #fff;
+	margin-left: -1px;
+}
+.about-sidenav > li > a:hover, .about-sidenav > li > ul > li > a:hover {
+	background-color: transparent;
+	border-left: 1px solid #fff;
+	margin-left: -1px;
+}
+.about-sidenav > li > .active, .about-sidenav > li > ul > li > .active {
+	background-color: transparent;
+	border-left: 1px solid #fff;
+	margin-left: -1px;
+}
+.about-img {
+	text-align: center;
+	margin-left: -40px;
+	padding: 20px;
+}
+.about-img-round {
+	border-radius: 5px;
+}
+.about-img-sm {
+	
 }
 
 /* Host CSS */

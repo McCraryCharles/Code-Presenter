@@ -7,6 +7,18 @@
 
 	include_once "php/db/dbLibrary.php"; // Include database library
 
+	if(isset($_GET['page'])) { // Handels direct static pages
+		switch ($_GET['page']) {
+			case 'about':
+				include_once 'php/pages/about/about.php'; // Load about page
+			break;
+			default:
+				include_once 'php/pages/home.php'; // Load homepage
+			break;
+		}
+		die; // Do not load other content, if a page is set
+	}
+
 	if(isset($_POST["g-recaptcha-response"]) && !isset($_COOKIE['userKey']) && !isset($_COOKIE['hostId']) && $config['captcha']!='false'){
 		$captcha = $_POST["g-recaptcha-response"];
 		include_once 'php/pages/home/captchaKey.php'; // File contains captcha key
