@@ -45,6 +45,7 @@ function roomUpdated(){ // Called whenever the room's update var has changed
 			break;
 		case 'user':
 			loadUserSubmissions(getCookie('userKey')); // Update sidebar
+			setPublishButton(loadedSubmission); // Updates published status
 			break;
 	}
 }
@@ -123,6 +124,24 @@ function scratchPadSaved() {
 	window.setTimeout(function () {$('#host-save-button').removeAttr('disabled');}, 500);
 	//document.getElementById('host-save-status').innerHTML = '';
 	window.setTimeout(function () {$('#host-save-status').addClass('fade-status');}, 1000);
+}
+function setViewerColor(color) {
+	switch (color) {
+		case 'dark':
+			$('#viewer').removeClass('viewer');
+			$('#viewer').addClass('viewer-dark');
+			$('#light-button').removeClass('active');
+			$('#dark-button').addClass('active');
+			setCookie('hostColor', 'dark', 24 + 30);
+		break;
+		case 'light':
+			$('#viewer').removeClass('viewer-dark');
+			$('#viewer').addClass('viewer');
+			$('#light-button').addClass('active');
+			$('#dark-button').removeClass('active');
+			setCookie('hostColor', 'light', 24 + 30);
+		break;
+	}
 }
 function loadUserSubmission(submissionId) { // Single submission on the user page
 	loadUserEditor(submissionId);

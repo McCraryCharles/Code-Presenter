@@ -1,4 +1,4 @@
-<div id="viewer" class="">
+<div id="viewer" class="viewer">
 	<div class="host-code-block-compressed" id="host-code-block">
 		<div id="code-block">
 			<textarea id="code-box" class="code-text-box" spellcheck="false">Console.WriteLine("Lets code!");</textarea>

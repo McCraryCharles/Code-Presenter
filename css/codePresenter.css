@@ -390,10 +390,22 @@ body {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
-#viewer {
+.viewer {
 	position: fixed;
 	top: 70px;
 	bottom: 10px;
+}
+.viewer-dark > .host-code-block, 
+.viewer-dark > .host-code-block-compressed,
+.viewer-dark > .host-code-block > #code-block > textarea, 
+.viewer-dark > .host-code-block-compressed > #code-block > textarea
+{
+	background-color: #333;
+	color: #fff;
+	transition: color 0.3s ease-out background-color 0.3s ease-out;
+	-moz-transition: color 0.3s ease-out background-color 0.3s ease-out; 
+	-webkit-transition: color 0.3s ease-out background-color 0.3s ease-out; 
+	-o-transition: color 0.3s ease-out background-color 0.3s ease-out;
 }
 .host-code-block {
 	position: fixed;

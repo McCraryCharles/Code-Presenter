@@ -23,8 +23,8 @@
 							<td class="col-sm-4">Editor Theme: </td>
 							<td class="col-sm-8">
 								<div class="btn-group pull-right btn-pad" role="group" aria-label="Room-Theme">
-									<button type="button" class="btn btn-primary">Light</button>
-									<button type="button" class="btn btn-primary">Dark</button>
+									<button type="button" id="light-button" class="btn btn-primary active" onclick="setViewerColor('light')">Light</button>
+									<button type="button" id="dark-button" class="btn btn-primary" onclick="setViewerColor('dark')">Dark</button>
 								</div>
 								<div class="clearfix"></div>
 							</td>
@@ -41,8 +41,7 @@
 					</table>
 					<input type="hidden" id="room-code" value="<?php echo $roomCode; ?>">
 					<span class="clearfix"></span>
-					<button type="submit" class="btn btn-primary pull-right">Save</button>
-					<button  class="btn btn-default btn-invert-b pull-right" data-dismiss="modal" >Cancel</button>
+					<button type="submit" class="btn btn-primary pull-right" data-dismiss="modal">Close</button>
 					<span class="clearfix"></span>
 				</form>
 			</div>
