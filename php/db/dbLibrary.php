@@ -79,6 +79,10 @@ function createRoom() {
 	setcookie("hostId", $hostId, time()+(3600*$config['hostCookieExp'])); // Set host cookie for 12 hours
 	return $roomId;
 }
+function deleteRoom($roomId) { // Delets a room by id
+	$sql = 'DELETE FROM `rooms` WHERE `id` = ' . $roomId;
+	mysqli_query($conn, $sql);
+}
 function createUser($room, $name) {
 	$userKey;
 	do {

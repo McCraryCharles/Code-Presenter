@@ -9,7 +9,7 @@
 				<br />
 				<form id="host-menu-form" onsubmit="return false">
 					<table class="table">
-						<tr>
+						<!--<tr>
 							<td class="col-sm-4">Room Controls: </td>
 							<td class="col-sm-8">
 								<button type="button" class="btn btn-danger pull-right btn-pad">Remove All Users</button>
@@ -18,7 +18,7 @@
 								<div class="clearfix"></div>
 								<div class="clearfix"></div>
 							</td>
-						</tr>
+						</tr>-->
 						<tr>
 							<td class="col-sm-4">Editor Theme: </td>
 							<td class="col-sm-8">
