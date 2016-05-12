@@ -1,6 +1,8 @@
 # CodePresenter
 A simple educational tool designed to engage student participation through real-time code collaboration.
 
+A live implementation is available at http://codepresenter.net/
+
 ## Usage
 CodePresenter is centered around simplicity and ease of use
 
