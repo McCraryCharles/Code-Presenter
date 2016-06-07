@@ -16,7 +16,7 @@
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/overrides.css" rel="stylesheet">
 	<link href="css/codePresenter.css" rel="stylesheet">
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:700,300,400,500' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:700,300,400,500' rel='stylesheet' type='text/css'>
 	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:700,400,500' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/offline-theme.css">
